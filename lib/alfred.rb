@@ -61,14 +61,8 @@ module Alfred
       @feedback ||= Feedback.new
     end
 
-    def info_plist_path
-      path = File.join(File.dirname(__FILE__), '../info.plist')
-      raise PathError unless File.exist?(path)
-      path
-    end
-
     def info_plist
-      @info_plist ||= Plist::parse_xml(info_plist_path)
+      @info_plist ||= Plist::parse_xml('info.plist')
     end
 
     # Returns nil if not set.
