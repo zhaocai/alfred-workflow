@@ -1,5 +1,7 @@
 # alfred-workflow
 
+* https://github.com/zhaocai/alfred-workflow
+
 Ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow.
 
 ## FEATURES:
