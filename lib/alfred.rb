@@ -5,6 +5,8 @@ require 'fileutils'
 require 'logging'
 require "rexml/document"
 
+require 'alfred/version'
+
 module Alfred
 
   class AlfredError < RuntimeError

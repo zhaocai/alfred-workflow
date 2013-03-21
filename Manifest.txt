@@ -1,6 +1,6 @@
-.autotest
 History.txt
 Manifest.txt
 README.txt
 Rakefile
-lib/alfred/alfred.rb
+lib/alfred.rb
+lib/alfred/version.rb
