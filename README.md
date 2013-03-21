@@ -4,12 +4,12 @@ Ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow.
 
 ## FEATURES:
 
-* Functions for finding your bundle ID, cache and storage paths, and query arguments.
-* Functions for reading and writing plist files.
+* Functions for finding the bundle ID, cache and storage paths, and query arguments.
 * Shows exceptions and debug output in the Mac OS X Console
-* A class to simplify generating feedback XML for Alfred.
+* Functions for reading and writing plist files.
+* Functions to simplify generating feedback XML for Alfred.
 * Adds ruby gems repositories to the workflow bundle so you can package gems with your workflow.
-* A class to simplify saving and retrieving settings.
+* Functions to simplify saving and retrieving settings.
 
 
 ## REQUIREMENTS:
@@ -21,7 +21,7 @@ Ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow.
 
 ## USAGE:
 
-* Refer to [alfred2-ruby-template]( https://github.com/zhaocai/alfred2-ruby-template ).
+* Refer to [alfred2-ruby-template]( https://github.com/zhaocai/alfred2-ruby-template ) for example and detailed instruction.
 
 
 ## DEVELOPERS:
