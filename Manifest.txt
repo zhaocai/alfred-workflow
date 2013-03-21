@@ -1,6 +1,6 @@
 History.txt
 Manifest.txt
-README.txt
+README.md
 Rakefile
 lib/alfred.rb
 lib/alfred/version.rb

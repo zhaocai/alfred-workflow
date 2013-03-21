@@ -1,12 +1,8 @@
-= alfred-workflow
+# alfred-workflow
 
-* https://github.com/zhaocai/alfred-workflow
+Ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow.
 
-== DESCRIPTION:
-
-Ruby Gem helper for building Alfred workflow (http://www.alfredapp.com).
-
-== FEATURES/PROBLEMS:
+## FEATURES:
 
 * Functions for finding your bundle ID, cache and storage paths, and query arguments.
 * Functions for reading and writing plist files.
@@ -16,20 +12,19 @@ Ruby Gem helper for building Alfred workflow (http://www.alfredapp.com).
 * A class to simplify saving and retrieving settings.
 
 
-== SYNOPSIS:
+## REQUIREMENTS:
 
 
-== REQUIREMENTS:
+## INSTALL:
+
+`gem install alfred-workflow`
+
+## USAGE:
+
+* Refer to [alfred2-ruby-template]( https://github.com/zhaocai/alfred2-ruby-template ).
 
 
-== INSTALL:
-
-* gem install alfred-workflow
-
-== USAGE:
-
-
-== DEVELOPERS:
+## DEVELOPERS:
 
 After checking out the source, run:
 
@@ -38,7 +33,7 @@ After checking out the source, run:
 This task will install any missing dependencies, run the tests/specs,
 and generate the RDoc.
 
-== LICENSE:
+## LICENSE:
 
 (The MIT License)
 
