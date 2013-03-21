@@ -163,7 +163,7 @@ module Alfred
     def add_file_item(path)
       item = {}
       if ['.ennote', '.webbookmark'].include? File.extname(path)
-        item[:title] = %x{mdls mdls -name kMDItemDisplayName -raw '#{path}'}
+        item[:title] = %x{mdls -name kMDItemDisplayName -raw '#{path}'}
       else
         item[:title] = File.basename(path)
       end
