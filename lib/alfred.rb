@@ -73,7 +73,7 @@ module Alfred
     def volatile_storage_path
       raise NoBundleIDError unless bundle_id
       path = "#{ENV['HOME']}/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/#{bundle_id}"
-      unless Dir.exist?(path)
+      unless File.exist?(path)
         FileUtils.mkdir_p(path)
       end
       path
@@ -83,7 +83,7 @@ module Alfred
     def storage_path
       raise NoBundleIDError unless bundle_id
       path = "#{ENV['HOME']}/Library/Application Support/Alfred 2/Workflow Data/#{bundle_id}"
-      unless Dir.exist?(path)
+      unless File.exist?(path)
         FileUtils.mkdir_p(path)
       end
       path
