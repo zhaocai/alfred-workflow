@@ -74,7 +74,7 @@ module Alfred
       raise NoBundleIDError unless bundle_id
       path = "#{ENV['HOME']}/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/#{bundle_id}"
       unless Dir.exist?(path)
-        FileUtils.makdir_p(path)
+        FileUtils.mkdir_p(path)
       end
       path
     end
@@ -84,7 +84,7 @@ module Alfred
       raise NoBundleIDError unless bundle_id
       path = "#{ENV['HOME']}/Library/Application Support/Alfred 2/Workflow Data/#{bundle_id}"
       unless Dir.exist?(path)
-        FileUtils.makdir_p(path)
+        FileUtils.mkdir_p(path)
       end
       path
     end
@@ -159,6 +159,25 @@ module Alfred
 
       @items << opts unless opts[:title].nil?
     end
+
+    def add_file_item(path)
+      item = {}
+      if ['.ennote', '.webbookmark'].include? File.extname(path)
+        item[:title] = %x{mdls mdls -name kMDItemDisplayName -raw '#{path}'}
+      else
+        item[:title] = File.basename(path)
+      end
+      item[:subtitle] = path
+      item[:uid] = path
+      item[:arg] = path
+      item[:icon] = {:type => "fileicon", :name => path}
+      item[:valid] = 'yes'
+      item[:autocomplete] = item[:title]
+      item[:type] = 'file'
+
+      @items << item
+    end
+
 
     def to_xml(items = @items)
       document = REXML::Element.new("items")
