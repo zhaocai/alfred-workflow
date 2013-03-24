@@ -1,9 +1,9 @@
 # alfred-workflow
 
 * home  :: https://github.com/zhaocai/alfred-workflow
+* rdoc  :: http://rubydoc.info/gems/alfred-workflow/
 * code  :: https://github.com/zhaocai/alfred-workflow
 * bugs  :: https://github.com/zhaocai/alfred-workflow/issues
-* rdoc  :: http://rubydoc.info/gems/alfred-workflow/
 
 
 ## DESCRIPTION:
@@ -33,7 +33,7 @@ Alfred.with_friendly_error do |alfred|
 
   fb.add_file_item(File.expand_path "~/Applications/")
 
-  puts fb.to_xml
+  fb.output_for_query(ARGV)
 end
 ```
 

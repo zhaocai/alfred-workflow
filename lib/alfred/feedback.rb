@@ -157,6 +157,10 @@ module Alfred
     end
 
 
+    def output_for_query(query = '', items = @items)
+      puts to_xml(query, items)
+    end
+
     def to_xml(query = '', items = @items)
       document = REXML::Element.new("items")
       items.each do |item|
