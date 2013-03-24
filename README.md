@@ -1,14 +1,20 @@
 # alfred-workflow
 
-* https://github.com/zhaocai/alfred-workflow
+home  :: https://github.com/zhaocai/alfred-workflow
+code  :: https://github.com/zhaocai/alfred-workflow
+bugs  :: https://github.com/zhaocai/alfred-workflow/issues
+rdoc  :: http://rubydoc.info/gems/alfred-workflow/
 
-Ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow.
+## DESCRIPTION:
+
+`alfred-workflow` is a ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow. 
 
 
 ## FEATURES:
 
 * Use standard [bundler][gembundler] to easily package, manage, and update ruby gems in the workflow.
 * Friendly exception and debug output to the Mac OS X Console
+* Functions for smart case query filter of feedback results.
 * Functions for finding the bundle ID, cache and storage paths, and query arguments.
 * Functions for reading and writing plist files.
 * Functions to simplify generating feedback XML for Alfred.
@@ -55,3 +61,4 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 
 [gembundler]: http://gembundler.com/
+[alfredapp]: http://www.alfredapp.com
