@@ -3,21 +3,11 @@
 require 'rubygems'
 require 'hoe'
 
-# Hoe.plugin :bundler
-# Hoe.plugin :compiler
-# Hoe.plugin :email
-# Hoe.plugin :gem_prelude_sucks
+Hoe.plugin :bundler
 Hoe.plugin :gemspec
 Hoe.plugin :git
-# Hoe.plugin :inline
-# Hoe.plugin :manualgen
-# Hoe.plugin :minitest
-# Hoe.plugin :perforce
-# Hoe.plugin :racc
-# Hoe.plugin :rcov
-# Hoe.plugin :rubyforge
-# Hoe.plugin :rubygems
-# Hoe.plugin :seattlerb
+Hoe.plugin :rubygems
+Hoe.plugin :version
 
 Hoe.spec 'alfred-workflow' do
 
@@ -27,4 +17,9 @@ Hoe.spec 'alfred-workflow' do
   extra_deps << ['logging', '~> 1.8.0']
 end
 
+desc "Bump Patch and Release"
+task "release:patch" => ["version:bump:patch"] do
+  sh "git commit -a -m '* Bump version to #{ENV["VERSION"]}'"
+  invoke_task(:release)
+end
 # vim: syntax=ruby
