@@ -17,9 +17,17 @@ Hoe.spec 'alfred-workflow' do
   extra_deps << ['logging', '~> 1.8.0']
 end
 
-desc "Bump Patch and Release"
-task "release:patch" => ["version:bump:patch"] do
+desc "Bump Major Version and Release"
+task "release:major" => ["version:bump:major"] do
   sh "git commit -a -m '* Bump version to #{ENV["VERSION"]}'"
-  invoke_task(:release)
+  Rake::Task["release"].invoke
 end
+
+desc "Bump Patch Version and Release"
+task "release:patch" => ["version:bump:patch"] do
+  sh "git commit -a -m '! Bump version to #{ENV["VERSION"]}'"
+  Rake::Task["release"].invoke
+end
+
+
 # vim: syntax=ruby
