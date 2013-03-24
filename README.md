@@ -6,11 +6,11 @@ Ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow.
 
 ## FEATURES:
 
+* Use standard [bundler][gembundler] to easily package, manage, and update ruby gems in the workflow.
+* Friendly exception and debug output to the Mac OS X Console
 * Functions for finding the bundle ID, cache and storage paths, and query arguments.
-* Shows exceptions and debug output in the Mac OS X Console
 * Functions for reading and writing plist files.
 * Functions to simplify generating feedback XML for Alfred.
-* Adds ruby gems repositories to the workflow bundle so you can package gems with your workflow.
 * Functions to simplify saving and retrieving settings.
 
 
@@ -37,25 +37,19 @@ and generate the RDoc.
 
 ## LICENSE:
 
-(The MIT License)
+Copyright (c) 2013 Zhao Cai <caizhaoff@gmail.com>
 
-Copyright (c) 2013, Zhao Cai
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <http://www.gnu.org/licenses/>.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+[gembundler]: http://gembundler.com/
