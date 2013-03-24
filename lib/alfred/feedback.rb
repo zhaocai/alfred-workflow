@@ -45,6 +45,27 @@ module Alfred
         end
       end
 
+      ## To customize a new match? function, overwrite it.
+      #
+      # Module Alfred
+      #   class Feedback
+      #     class Item
+      #       alias_method :default_match?, :match?
+      #       def match?(query)
+      #         # define new match? function here
+      #       end
+      #     end
+      #   end
+      # end
+      def match?(query)
+        return true if query.empty?
+        if smart_query(query).match(@title)
+          return true
+        else
+          return false
+        end
+      end
+
       def to_xml
         xml_element = REXML::Element.new('item')
         xml_element.add_attributes({
@@ -65,9 +86,23 @@ module Alfred
         xml_element
       end
 
+      protected
+
+      def smart_query(query)
+        if query.is_a? Array
+          query = query.join(" ")
+        end
+        option = Regexp::IGNORECASE
+        if /[[:upper:]]/.match(query)
+          option = nil
+        end
+        Regexp.compile(".*#{query.gsub(/\s+/,'.*')}.*", option)
+      end
+
     end
 
     class FileItem < Item
+
       def initialize(path)
         if ['.ennote', '.webbookmark'].include? File.extname(path)
           @title = %x{mdls -name kMDItemDisplayName -raw '#{path}'}
@@ -82,6 +117,29 @@ module Alfred
         @autocomplete = @title
         @type = 'file'
       end
+
+      def match?(query)
+        return true if query.empty?
+        if query.is_a? String
+          query = query.split("\s")
+        end
+
+        queries = []
+        query.each { |q|
+          queries << smart_query(q)
+        }
+
+        queries.delete_if { |q|
+          q.match(@title) or q.match(@subtitle)
+        }
+
+        if queries.empty?
+          return true
+        else
+          return false
+        end
+      end
+
     end
 
 
@@ -98,10 +156,11 @@ module Alfred
       @items << FileItem.new(path)
     end
 
-    def to_xml(items = @items)
+
+    def to_xml(query = '', items = @items)
       document = REXML::Element.new("items")
       items.each do |item|
-        document << item.to_xml
+        document << item.to_xml if item.match?(query)
       end
       document.to_s
     end
