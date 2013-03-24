@@ -1,13 +1,14 @@
 # alfred-workflow
 
-home  :: https://github.com/zhaocai/alfred-workflow
-code  :: https://github.com/zhaocai/alfred-workflow
-bugs  :: https://github.com/zhaocai/alfred-workflow/issues
-rdoc  :: http://rubydoc.info/gems/alfred-workflow/
+* home  :: https://github.com/zhaocai/alfred-workflow
+* code  :: https://github.com/zhaocai/alfred-workflow
+* bugs  :: https://github.com/zhaocai/alfred-workflow/issues
+* rdoc  :: http://rubydoc.info/gems/alfred-workflow/
+
 
 ## DESCRIPTION:
 
-`alfred-workflow` is a ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow. 
+alfred-workflow is a ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow.
 
 
 ## FEATURES:
@@ -20,6 +21,23 @@ rdoc  :: http://rubydoc.info/gems/alfred-workflow/
 * Functions to simplify generating feedback XML for Alfred.
 * Functions to simplify saving and retrieving settings.
 
+## SYNOPSIS:
+
+```ruby
+require 'rubygems' unless defined? Gem
+require "bundle/bundler/setup"
+require "alfred"
+
+Alfred.with_friendly_error do |alfred|
+  fb = alfred.feedback
+
+  fb.add_file_item(File.expand_path "~/Applications/")
+
+  puts fb.to_xml
+end
+```
+
+Code are wrapped in `Alfred.with_friendly_error` block. Exceptions and debug messages are logged to Console log file **~/Library/Logs/Alfred-Workflow.log**.
 
 ## INSTALL:
 
