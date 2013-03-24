@@ -4,6 +4,7 @@
 
 Ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow.
 
+
 ## FEATURES:
 
 * Use standard [bundler][gembundler] to easily package, manage, and update ruby gems in the workflow.
@@ -14,9 +15,6 @@ Ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow.
 * Functions to simplify saving and retrieving settings.
 
 
-## REQUIREMENTS:
-
-
 ## INSTALL:
 
 `gem install alfred-workflow`
@@ -24,6 +22,10 @@ Ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow.
 ## USAGE:
 
 * Refer to [alfred2-ruby-template]( https://github.com/zhaocai/alfred2-ruby-template ) for example and detailed instruction.
+
+## Example Projects
+
+* [alfred2_top_workflow]( https://github.com/zhaocai/alfred2-top-workflow )
 
 
 ## DEVELOPERS:

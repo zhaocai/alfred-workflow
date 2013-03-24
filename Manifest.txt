@@ -1,6 +1,10 @@
+.autotest
+.gemtest
 History.txt
 Manifest.txt
 README.md
 Rakefile
 lib/alfred.rb
+lib/alfred/feedback.rb
+lib/alfred/ui.rb
 lib/alfred/version.rb
