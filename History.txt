@@ -1,3 +1,11 @@
+=== 1.1.0 / 2013-03-24
+* 3 major enhancements:
+
+  * reorganize Alfred module to multiple files
+  * use FileItem < Item classes to manage feedback item
+  * add default query match for Item and FileItem
+
+
 === 1.0.0 / 2013-03-21
 
 * 1 major enhancement
