@@ -1,6 +1,7 @@
 .autotest
 .gemtest
 .rspec
+.ruby-version
 Gemfile
 Gemfile.lock
 History.txt
@@ -14,5 +15,6 @@ lib/alfred/feedback/file_item.rb
 lib/alfred/feedback/item.rb
 lib/alfred/ui.rb
 lib/alfred/version.rb
+spec/feedback_spec.rb
 spec/item_spec.rb
 spec/spec_helper.rb

@@ -1,3 +1,11 @@
+=== 1.2.3 / 2013-03-25
+
+* add function to output rescue feedback xml items
+* add a few query regexp builders
+! refactor feedback items
+! add autotest support
+! add rspec test
+
 === 1.1.0 / 2013-03-24
 * 3 major enhancements:
 
