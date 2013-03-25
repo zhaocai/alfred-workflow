@@ -28,7 +28,7 @@ module Alfred
 
         queries = []
         query.each { |q|
-          queries << smart_query(q)
+          queries << smartcase_query(q)
         }
 
         queries.delete_if { |q|

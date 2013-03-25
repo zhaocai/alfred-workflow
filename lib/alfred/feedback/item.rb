@@ -56,7 +56,7 @@ module Alfred
       # end
       def match?(query)
         return true if query.empty?
-        if smart_query(query).match(@title)
+        if smartcase_query(query).match(@title)
           return true
         else
           return false
@@ -85,7 +85,7 @@ module Alfred
 
       protected
 
-      def smart_query(query)
+      def smartcase_query(query)
         if query.is_a? Array
           query = query.join(" ")
         end
@@ -94,6 +94,21 @@ module Alfred
           option = nil
         end
         Regexp.compile(".*#{query.gsub(/\s+/,'.*')}.*", option)
+      end
+
+      def ignorecase_query(query)
+        if query.is_a? Array
+          query = query.join(" ")
+        end
+        option = Regexp::IGNORECASE
+        Regexp.compile(".*#{query.gsub(/\s+/,'.*')}.*", option)
+      end
+
+      def default_query(query)
+        if query.is_a? Array
+          query = query.join(" ")
+        end
+        Regexp.compile(".*#{query.gsub(/\s+/,'.*')}.*")
       end
 
     end
