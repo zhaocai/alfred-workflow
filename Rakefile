@@ -7,7 +7,7 @@ Hoe.plugin :bundler
 Hoe.plugin :test
 
 Hoe.plugin :git
-Hoe.plugin :rubygems
+Hoe.plugin :gemspec
 Hoe.plugin :version
 
 Hoe.spec 'alfred-workflow' do

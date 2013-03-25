@@ -59,6 +59,10 @@ module Alfred
       #   end
       # end
       def match?(query)
+        title_match?(query)
+      end
+
+      def title_match?(query)
         return true if query.empty?
         if smartcase_query(query).match(@title)
           return true
@@ -66,6 +70,29 @@ module Alfred
           return false
         end
       end
+
+      def all_title_match?(query)
+        return true if query.empty?
+        if query.is_a? String
+          query = query.split("\s")
+        end
+
+        queries = []
+        query.each { |q|
+          queries << smartcase_query(q)
+        }
+
+        queries.delete_if { |q|
+          q.match(@title) or q.match(@subtitle)
+        }
+
+        if queries.empty?
+          return true
+        else
+          return false
+        end
+      end
+
 
       def to_xml
         xml_element = REXML::Element.new('item')

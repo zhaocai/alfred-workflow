@@ -21,25 +21,7 @@ module Alfred
       end
 
       def match?(query)
-        return true if query.empty?
-        if query.is_a? String
-          query = query.split("\s")
-        end
-
-        queries = []
-        query.each { |q|
-          queries << smartcase_query(q)
-        }
-
-        queries.delete_if { |q|
-          q.match(@title) or q.match(@subtitle)
-        }
-
-        if queries.empty?
-          return true
-        else
-          return false
-        end
+        all_title_match?(query)
       end
 
     end
