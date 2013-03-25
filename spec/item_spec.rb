@@ -17,4 +17,5 @@ describe "Feedback Item" do
     default_icon = {:type => "default", :name => "icon.png"}
     item.icon.should eql default_icon
   end
+
 end
