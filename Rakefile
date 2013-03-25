@@ -19,4 +19,18 @@ Hoe.spec 'alfred-workflow' do
   extra_deps << ['logging', '~> 1.8.0']
 end
 
+desc "Bump Major Version and Commit"
+task "bump:major" => ["version:bump:major"] do
+  sh "git commit -am '! Bump version to #{ENV["VERSION"]}'"
+end
+
+desc "Bump Minor Version and Commit"
+task "bump:minor" => ["version:bump:minor"] do
+  sh "git commit -am '* Bump version to #{ENV["VERSION"]}'"
+end
+desc "Bump Patch Version and Commit"
+task "bump:patch" => ["version:bump:patch"] do
+  sh "git commit -am 'Bump version to #{ENV["VERSION"]}'"
+end
+
 # vim: syntax=ruby

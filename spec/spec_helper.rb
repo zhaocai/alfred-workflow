@@ -1,16 +1,17 @@
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
+require "rspec"
 require "alfred"
 
-RSpec.configure do |config|
-  # Use color in STDOUT
-  config.color_enabled = true
+RSpec.configure do |c|
+  c.color_enabled = true
 
   # Use color not only in STDOUT but also in pagers and files
-  config.tty = true
+  c.tty = true
 
-  # Use the specified formatter
-  config.formatter = :documentation # :progress, :html, :textmate
+  c.formatter = :documentation # :progress, :html, :textmate
+
+  c.mock_with :rspec
 end
 
 class String

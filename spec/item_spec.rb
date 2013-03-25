@@ -1,6 +1,6 @@
-require_relative "spec_helper"
+require "spec_helper"
 
-describe "Item" do
+describe "Feedback Item" do
   it "should return raise ArgumentError without Item title" do
     expect { Alfred::Feedback::Item.new }.to raise_error(ArgumentError)
   end
