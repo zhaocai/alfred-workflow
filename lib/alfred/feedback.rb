@@ -29,6 +29,7 @@ module Alfred
     end
 
     alias_method :to_alfred, :to_xml
+
   end
 
 end

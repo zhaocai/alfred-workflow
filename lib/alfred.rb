@@ -89,9 +89,27 @@ module Alfred
       path
     end
 
+    def rescue_feedback(opts = {})
+      default_opts = {
+        :title    => "Failed Query!",
+        :subtitle => "Check the log file below for extra debug info.",
+        :uid      => 'Rescue Feedback',
+        :icon     => {
+          :type => "default" ,
+          :name => "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertStopIcon.icns"
+        }
+      }
+      opts = default_opts.update(opts)
+
+      items = []
+      items << Feedback::Item.new(opts[:title], opts)
+      items << Feedback::FileItem.new(ui.logger_file)
+
+      feedback.to_alfred('', items)
+    end
+
+
   end
-
-
 
 end
 

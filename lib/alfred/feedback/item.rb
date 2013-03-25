@@ -15,7 +15,11 @@ module Alfred
           @icon    = {:type => "default", :name => "icon.png"}
         end
 
-        @uid      = opts[:uid] if opts[:uid]
+        if opts[:uid]
+          @uid    = opts[:uid]
+        else
+          @uid    = ''
+        end
 
         if opts[:arg]
           @arg    = opts[:arg]
