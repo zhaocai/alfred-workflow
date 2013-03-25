@@ -33,7 +33,7 @@ Alfred.with_friendly_error do |alfred|
 
   fb.add_file_item(File.expand_path "~/Applications/")
 
-  fb.output_for_query(ARGV)
+  puts fb.to_alfred(ARGV)
 end
 ```
 
