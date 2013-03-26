@@ -16,7 +16,6 @@ module Alfred
 
   class ObjCError           < AlfredError; status_code(1) ; end
   class NoBundleIDError     < AlfredError; status_code(2) ; end
-  class ArgumentError       < AlfredError; status_code(3) ; end
   class NoMethodError       < AlfredError; status_code(13) ; end
   class PathError           < AlfredError; status_code(14) ; end
 
@@ -37,8 +36,9 @@ module Alfred
         exit e.status
       rescue Exception => e
         alfred.ui.error(
-          "Unfortunately, a fatal error has occurred. Please seek help in the Alfred Forum or raise an issue in \n" \
-          "github. Thanks!\n  #{e.inspect} #{e.backtrace.join("\n")}\n")
+          "A fatal error has occurred. " \
+          "You may seek help in the Alfred supporting site, forum or raise an issue in the bug tracking site.\n" \
+          "  #{e.inspect}\n#{e.backtrace.join("\n")}\n")
         raise e
       end
     end

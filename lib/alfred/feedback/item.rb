@@ -116,6 +116,14 @@ module Alfred
 
       protected
 
+      def build_regexp(query, option)
+        begin
+          Regexp.compile(".*#{query.gsub(/\s+/,'.*')}.*", option)
+        rescue RegexpError => e
+          Regexp.compile(".*#{Regexp.escape(query)}.*", option)
+        end
+      end
+
       def smartcase_query(query)
         if query.is_a? Array
           query = query.join(" ")
@@ -124,7 +132,7 @@ module Alfred
         if /[[:upper:]]/.match(query)
           option = nil
         end
-        Regexp.compile(".*#{query.gsub(/\s+/,'.*')}.*", option)
+        build_regexp(query, option)
       end
 
       def ignorecase_query(query)
@@ -132,14 +140,14 @@ module Alfred
           query = query.join(" ")
         end
         option = Regexp::IGNORECASE
-        Regexp.compile(".*#{query.gsub(/\s+/,'.*')}.*", option)
+        build_regexp(query, option)
       end
 
       def default_query(query)
         if query.is_a? Array
           query = query.join(" ")
         end
-        Regexp.compile(".*#{query.gsub(/\s+/,'.*')}.*")
+        build_regexp(query, nil)
       end
 
     end
