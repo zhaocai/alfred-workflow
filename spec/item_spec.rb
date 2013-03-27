@@ -9,7 +9,7 @@ describe "Feedback Item" do
     item = Alfred::Feedback::Item.new("title")
     item.title.should eql "title"
     item.subtitle.should eql nil
-    item.autocomplete.should eql item.title
+    item.autocomplete.should eql nil
     item.arg.should eql item.title
     item.valid.should eql "yes"
     item.type.should eql "default"

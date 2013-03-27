@@ -9,5 +9,6 @@ gem "logging", "~>1.8.0"
 
 gem "rdoc", "~>3.10", :group => [:development, :test]
 gem "hoe", "~>3.5", :group => [:development, :test]
+gem "rspec", "~>2.13", :group => [:development, :test]
 
 # vim: syntax=ruby
