@@ -67,7 +67,7 @@ module Alfred
 
     # Returns nil if not set.
     def bundle_id
-      info_plist['bundleid'] unless info_plist['bundleid'].empty?
+      @bundle_id ||= info_plist['bundleid'] unless info_plist['bundleid'].empty?
     end
 
     def volatile_storage_path
