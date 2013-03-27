@@ -41,8 +41,6 @@ module Alfred
 
         if opts[:autocomplete]
           @autocomplete    = opts[:autocomplete]
-        else
-          @autocomplete    = @title
         end
       end
 
