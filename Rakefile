@@ -12,7 +12,11 @@ Hoe.plugin :version
 
 Hoe.spec 'alfred-workflow' do
 
-  developer('Zhao Cai', 'caizhaoff@gmail.com')
+  developer 'Zhao Cai', 'caizhaoff@gmail.com'
+
+  license 'GPL-3'
+
+
 
   testlib = :minitest
   extra_deps << ['plist', '~> 3.1.0']

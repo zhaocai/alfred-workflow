@@ -27,28 +27,38 @@ module Alfred
       rescue AlfredError => e
         alfred.ui.error e.message
         alfred.ui.debug e.backtrace.join("\n")
+        puts alfred.rescue_feedback(
+          :title => "#{e.class}: #{e.message}") if alfred.with_rescue_feedback
         exit e.status_code
       rescue Interrupt => e
         alfred.ui.error "\nQuitting..."
         alfred.ui.debug e.backtrace.join("\n")
+        puts alfred.rescue_feedback(
+          :title => "Interrupt: #{e.message}") if alfred.with_rescue_feedback
         exit 1
       rescue SystemExit => e
+        puts alfred.rescue_feedback(
+          :title => "SystemExit: #{e.status}") if alfred.with_rescue_feedback
         exit e.status
       rescue Exception => e
         alfred.ui.error(
           "A fatal error has occurred. " \
-          "You may seek help in the Alfred supporting site, forum or raise an issue in the bug tracking site.\n" \
+          "You may seek help in the Alfred supporting site, "\
+          "forum or raise an issue in the bug tracking site.\n" \
           "  #{e.inspect}\n#{e.backtrace.join("\n")}\n")
-        raise e
+        puts alfred.rescue_feedback(
+          :title => "Fatal Error!") if alfred.with_rescue_feedback
+        exit(-1)
       end
     end
   end
 
 
   class Core
-    attr_reader :query
+    attr_accessor :with_rescue_feedback
 
-    def initialize
+    def initialize(with_rescue_feedback = false)
+      @with_rescue_feedback = with_rescue_feedback
     end
 
     def ui
@@ -89,6 +99,9 @@ module Alfred
       path
     end
 
+    def with_rescue_feedback
+      
+    end
     def rescue_feedback(opts = {})
       default_opts = {
         :title    => "Failed Query!",

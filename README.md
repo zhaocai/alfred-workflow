@@ -14,7 +14,8 @@ alfred-workflow is a ruby Gem helper for building [Alfred](http://www.alfredapp.
 ## FEATURES:
 
 * Use standard [bundler][gembundler] to easily package, manage, and update ruby gems in the workflow.
-* Friendly exception and debug output to the Mac OS X Console
+* Friendly exception and debug output to the Mac OS X Console.
+* Automate rescue feedback items to alfred when something goes wrong.
 * Functions for smart case query filter of feedback results.
 * Functions for finding the bundle ID, cache and storage paths, and query arguments.
 * Functions for reading and writing plist files.
@@ -46,6 +47,7 @@ Code are wrapped in `Alfred.with_friendly_error` block. Exceptions and debug mes
 ## USAGE:
 
 * Refer to [alfred2-ruby-template]( https://github.com/zhaocai/alfred2-ruby-template ) for example and detailed instruction.
+
 
 ## Example Projects
 
