@@ -21,20 +21,17 @@ Hoe.spec 'alfred-workflow' do
   testlib = :minitest
   extra_deps << ['plist', '~> 3.1.0']
   extra_deps << ['logging', '~> 1.8.0']
+
+  # add rspce dep
 end
 
-desc "Bump Major Version and Commit"
-task "bump:major" => ["version:bump:major"] do
-  sh "git commit -am '! Bump version to #{ENV["VERSION"]}'"
-end
 
-desc "Bump Minor Version and Commit"
-task "bump:minor" => ["version:bump:minor"] do
-  sh "git commit -am '* Bump version to #{ENV["VERSION"]}'"
-end
-desc "Bump Patch Version and Commit"
-task "bump:patch" => ["version:bump:patch"] do
-  sh "git commit -am 'Bump version to #{ENV["VERSION"]}'"
-end
+%w{major minor patch}.each { |v| 
+  desc "Bump #{v.capitalize} Version and Commit"
+  task "bump:#{v}", [:message] => ["version:bump:#{v}"] do |t, args|
+    m = args[:message] ? args[:message] :'Bump version to #{ENV["VERSION"]}'
+    sh "git commit -am #{m}"
+  end
+}
 
 # vim: syntax=ruby

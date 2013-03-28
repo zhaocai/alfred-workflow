@@ -99,9 +99,6 @@ module Alfred
       path
     end
 
-    def with_rescue_feedback
-      
-    end
     def rescue_feedback(opts = {})
       default_opts = {
         :title    => "Failed Query!",
