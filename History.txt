@@ -1,3 +1,8 @@
+=== 1.2.6 / 2013-03-27
+
+! automate rescue feedback
+* save @bundle_id for reaccess
+
 === 1.2.3 / 2013-03-25
 
 * add function to output rescue feedback xml items
