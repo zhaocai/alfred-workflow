@@ -19,10 +19,10 @@ Hoe.spec 'alfred-workflow' do
 
 
   testlib = :minitest
-  extra_deps << ['plist', '~> 3.1.0']
-  extra_deps << ['logging', '~> 1.8.0']
+  extra_deps << ['plist', '>= 3.1.0']
+  extra_deps << ['logging', '>= 1.8.0']
 
-  # add rspce dep
+  extra_dev_deps << ['rspec', '>= 2.13']
 end
 
 
