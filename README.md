@@ -23,8 +23,21 @@ alfred-workflow is a ruby Gem helper for building [Alfred](http://www.alfredapp.
 * Functions for reading and writing plist files.
 * Functions to simplify generating feedback XML for Alfred.
 
+## INSTALL:
+
+`gem install alfred-workflow`
+
+## USAGE:
+
+* Refer to [alfred2-ruby-template]( https://github.com/zhaocai/alfred2-ruby-template ) for examples and detailed instruction. Also refer to some of the example projects:
+
+* [alfred2-top-workflow]( https://github.com/zhaocai/alfred2-top-workflow )
+* [alfred2-google-workflow]( https://github.com/zhaocai/alfred2-google-workflow )
+* [alfred2-sourcetree-workflow]( https://github.com/zhaocai/alfred2-sourcetree-workflow )
+
 ## SYNOPSIS:
 
+### The Basic
 ```ruby
 require 'rubygems' unless defined? Gem
 require "bundle/bundler/setup"
@@ -41,20 +54,59 @@ end
 
 Code are wrapped in `Alfred.with_friendly_error` block. Exceptions and debug messages are logged to Console log file **~/Library/Logs/Alfred-Workflow.log**.
 
-## INSTALL:
+### With rescue feedback automatically generated!
 
-`gem install alfred-workflow`
+```ruby
+require 'rubygems' unless defined? Gem
+require "bundle/bundler/setup"
+require "alfred"
 
-## USAGE:
+def my_code_with_something_goes_wrong
+  true
+end
 
-* Refer to [alfred2-ruby-template]( https://github.com/zhaocai/alfred2-ruby-template ) for example and detailed instruction.
+Alfred.with_friendly_error do |alfred|
+  alfred.with_rescue_feedback = true
+
+  fb = alfred.feedback
+
+  if my_code_with_something_goes_wrong
+    raise Alfred::NoBundleIDError, "Wrong Bundle ID Test!"
+  end
+end
+```
+
+![rescue feedback](https://raw.github.com/zhaocai/alfred2-ruby-template/master/screenshots/rescue%20feedback.png)
 
 
-## Example Projects
+### Automate saving and loading cached feedback
+```ruby
+require 'rubygems' unless defined? Gem
+require "bundle/bundler/setup"
+require "alfred"
 
-* [alfred2-top-workflow]( https://github.com/zhaocai/alfred2-top-workflow )
-* [alfred2-google-workflow]( https://github.com/zhaocai/alfred2-google-workflow )
-* [alfred2-sourcetree-workflow]( https://github.com/zhaocai/alfred2-sourcetree-workflow )
+Alfred.with_friendly_error do |alfred|
+  alfred.with_rescue_feedback = true
+  alfred.with_cached_feedback do
+    # expire in 1 hour
+    use_cache_file :expire => 3600
+    # use_cache_file :file => "/path/to/your/cache_file", :expire => 3600
+  end
+
+  if fb = alfred.feedback.get_cached_feedback
+    # cached feedback is valid
+    puts fb.to_alfred
+  else 
+    fb = alfred.feedback
+    # ... generate_feedback as usually
+    fb.put_cached_feedback
+  end
+end
+```
+
+
+
+
 
 
 ## Troubleshooting
