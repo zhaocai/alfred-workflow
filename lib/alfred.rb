@@ -45,11 +45,21 @@ module Alfred
           "A fatal error has occurred. " \
           "You may seek help in the Alfred supporting site, "\
           "forum or raise an issue in the bug tracking site.\n" \
-          "  #{e.inspect}\n#{e.backtrace.join("\n")}\n")
+          "  #{e.inspect}\n  #{e.backtrace.join("  \n")}\n")
         puts alfred.rescue_feedback(
           :title => "Fatal Error!") if alfred.with_rescue_feedback
         exit(-1)
       end
+    end
+
+
+    # launch alfred with query
+    def search(query = "")
+      %x{osascript <<__APPLESCRIPT__
+      tell application "Alfred 2"
+        search "#{query.gsub('"','\"')}"
+      end tell
+      __APPLESCRIPT__}
     end
   end
 
