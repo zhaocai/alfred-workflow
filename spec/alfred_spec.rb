@@ -8,17 +8,16 @@ describe "Alfred" do
   end
 
   it "should return a valid bundle id" do
-    @alfred.bundle_id.should == "me.zhaowu.alfred2-ruby-template"
+    @alfred.bundle_id.should == "me.zhaowu.alfred-workflow-gem"
   end
 
   context "Setting" do
-
     before :all do
       @setting = @alfred.setting
     end
     it "should correctly load settings" do
       settings = @setting.load
-      settings[:id].should == "me.zhaowu.alfred2-ruby-template"
+      settings[:id].should == "me.zhaowu.alfred-workflow-gem"
     end
 
     it "should correctly save settings" do
