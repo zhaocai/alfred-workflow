@@ -30,6 +30,18 @@ module Alfred
 
     alias_method :to_alfred, :to_xml
 
+
+
+    # serialize
+    def dump(fbfile)
+      File.open(fbfile, "wb") { |f| Marshal.dump(self, f) }
+    end
+
+    class << self
+      def load(fbfile)
+        File.open(fbfile, "rb") { |f| Marshal.load(f) }
+      end
+    end
   end
 
 end
