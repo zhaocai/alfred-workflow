@@ -25,7 +25,6 @@ Hoe.spec 'alfred-workflow' do
   extra_dev_deps << ['rspec', '>= 2.13']
 end
 
-
 %w{major minor patch}.each { |v| 
   desc "Bump #{v.capitalize} Version and Commit"
   task "bump:#{v}", [:message] => ["version:bump:#{v}"] do |t, args|
