@@ -52,7 +52,14 @@ Code are wrapped in `Alfred.with_friendly_error` block. Exceptions and debug mes
 
 ## Example Projects
 
-* [alfred2_top_workflow]( https://github.com/zhaocai/alfred2-top-workflow )
+* [alfred2-top-workflow]( https://github.com/zhaocai/alfred2-top-workflow )
+* [alfred2-google-workflow]( https://github.com/zhaocai/alfred2-google-workflow )
+* [alfred2-sourcetree-workflow]( https://github.com/zhaocai/alfred2-sourcetree-workflow )
+
+
+## Troubleshooting
+
+
 
 
 ## DEVELOPERS:
