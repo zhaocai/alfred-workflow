@@ -8,6 +8,7 @@ describe "Feedback" do
     @item_elements = %w{title subtitle icon}
     @item_attributes = %w{uid arg autocomplete}
   end
+
   it "should create a basic XML response" do
     @feedback.add_item(:uid          => "uid"          ,
                        :arg          => "arg"          ,
@@ -26,19 +27,7 @@ describe "Feedback" do
       </items>
     END
 
-    expected_xml = REXML::Document.new(xml_data)
-    feedback_xml = REXML::Document.new(@feedback.to_xml)
-
-    expected_item = expected_xml.get_elements('/items/item')[0]
-    feedback_item = feedback_xml.get_elements('/items/item')[0]
-
-    @item_elements.each { |i|
-      expected_item.elements[i].text.should == feedback_item.elements[i].text
-    }
-    @item_attributes.each { |i|
-      expected_item.attributes[i].should == feedback_item.attributes[i]
-    }
-
+    compare_xml(xml_data, @feedback.to_xml).should == true
   end
 
 end

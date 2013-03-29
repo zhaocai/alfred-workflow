@@ -81,6 +81,10 @@ module Alfred
       @setting ||= Setting.new(self)
     end
 
+    def with_cached_feedback(&blk)
+      @feedback = CachedFeedback.new(self, &blk)
+    end
+
     def feedback
       raise NoBundleIDError unless bundle_id
       @feedback ||= Feedback.new
@@ -113,7 +117,6 @@ module Alfred
       end
       path
     end
-
 
 
     def rescue_feedback(opts = {})
