@@ -1,4 +1,4 @@
-# alfred-workflow
+# alfred-workflow ![Build Status](https://secure.travis-ci.org/zhaocai/alfred-workflow.png?branch=master)
 
 * home  :: https://github.com/zhaocai/alfred-workflow
 * rdoc  :: http://rubydoc.info/gems/alfred-workflow/
