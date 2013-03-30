@@ -1,3 +1,11 @@
+=== 1.5.2 / 2013-03-29
+
+  * [New]( Travis CI Status Image )
+  * [New]( Automate cached feedback save and load! )
+  * [New]( Setting class to save and load user configures )
+  * [New]( add load and dump for feedback )
+  * [New]( Alfred.search(query) to launch alfred with query )
+
 === 1.2.6 / 2013-03-27
 
 ! automate rescue feedback
