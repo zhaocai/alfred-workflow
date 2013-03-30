@@ -23,6 +23,7 @@ Hoe.spec 'alfred-workflow' do
   extra_deps << ['logging', '>= 1.8.0']
 
   extra_dev_deps << ['rspec', '>= 2.13']
+  extra_dev_deps << ['rake', '>= 10.0.0']
 end
 
 %w{major minor patch}.each { |v| 

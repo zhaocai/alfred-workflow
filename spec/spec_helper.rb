@@ -1,8 +1,6 @@
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
 require "rspec"
-require 'awesome_print'
-require 'zucker/debug'
 
 require "alfred"
 
