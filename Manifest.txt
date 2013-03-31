@@ -1,15 +1,14 @@
-.autotest
 .gemtest
 .rspec
 .ruby-version
 .travis.yml
 Gemfile
 Gemfile.lock
+Guardfile
 History.txt
 Manifest.txt
 README.md
 Rakefile
-autotest/discover.rb
 lib/alfred.rb
 lib/alfred/feedback.rb
 lib/alfred/feedback/file_item.rb
