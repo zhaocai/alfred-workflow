@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     coderay (1.0.9)
-    diff-lcs (1.2.1)
+    diff-lcs (1.2.2)
     formatador (0.2.4)
     growl (1.0.3)
     guard (1.7.0)
@@ -40,7 +40,7 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
-    rake (10.0.3)
+    rake (10.0.4)
     rb-fsevent (0.9.3)
     rdoc (3.12.2)
       json (~> 1.4)
