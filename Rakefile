@@ -24,10 +24,14 @@ Hoe.spec 'alfred-workflow' do
 
   extra_dev_deps << ['rspec', '>= 2.13']
   extra_dev_deps << ['rake', '>= 10.0.0']
+  extra_dev_deps << ['hoe'] << ['hoe-gemspec'] << ['hoe-git'] << ['hoe-version'] << ['hoe-bundler']
+  extra_dev_deps << ['guard', '~> 1.7.0'] << ['guard-rspec'] << ['guard-bundler']
+  extra_dev_deps << ['terminal-notifier-guard'] << ['growl'] << ['rb-fsevent', '~> 0.9']
+
 end
 
-%w{major minor patch}.each { |v| 
-  desc "Bump #{v.capitalize} Version and Commit"
+%w{major minor patch}.each { |v|
+  desc "Bump #{v.capitalize} Version"
   task "bump:#{v}", [:message] => ["version:bump:#{v}"] do |t, args|
     m = args[:message] ? args[:message] : "Bump version to #{ENV["VERSION"]}"
     sh "git commit -am '#{m}'"
