@@ -61,7 +61,7 @@ PLATFORMS
 
 DEPENDENCIES
   growl
-  guard (~> 1.7.0)
+  guard
   guard-bundler
   guard-rspec
   hoe

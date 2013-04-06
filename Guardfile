@@ -15,7 +15,7 @@ end
 
 group :backend do
 
-  guard 'rspec', :rvm => ['system', '1.9.2', '1.9.3', '2.0.0', 'macruby-nightly'], :notification  => true  do
+  guard 'rspec', :rvm => ['system', '1.9.3', '2.0.0'], :notification  => true  do
 
     watch(%r{^spec/.+_spec\.rb$})
     watch(%r{^lib/(.+)\.rb$})     { |m| "spec/#{m[1]}_spec.rb" }

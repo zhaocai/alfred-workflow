@@ -18,6 +18,7 @@ module Alfred
 
   class ObjCError           < AlfredError; status_code(1) ; end
   class NoBundleIDError     < AlfredError; status_code(2) ; end
+  class InvalidFormat       < AlfredError; status_code(11) ; end
   class NoMethodError       < AlfredError; status_code(13) ; end
   class PathError           < AlfredError; status_code(14) ; end
 
@@ -77,8 +78,8 @@ module Alfred
       @ui ||= Logger.new(bundle_id)
     end
 
-    def setting
-      @setting ||= Setting.new(self)
+    def setting(&blk)
+      @setting ||= Setting.new(self, &blk)
     end
 
     def with_cached_feedback(&blk)

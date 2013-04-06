@@ -12,25 +12,61 @@ describe "Alfred" do
   end
 
   context "Setting" do
-    before :all do
+
+    it "should use yaml as defualt backend" do
       @setting = @alfred.setting
-    end
-    it "should correctly load settings" do
-      settings = @setting.load
-      settings[:id].should == "me.zhaowu.alfred-workflow-gem"
+      @setting.format.should == "yaml"
     end
 
-    it "should correctly save settings" do
-      settings = @setting.load
-      settings[:language] = "Chinese"
-      @setting.dump(settings, :flush => true)
+    context "with Yaml Backend" do
+      before :all do
+        @setting = @alfred.setting do
+          use_setting_file :format => 'yaml'
+        end
+      end
+      it "should correctly load settings" do
+        settings = @setting.load
+        settings[:id].should == "me.zhaowu.alfred-workflow-gem"
+      end
 
-      settings = @alfred.setting.load
-      settings[:language].should == "Chinese"
+      it "should correctly save settings" do
+        settings = @setting.load
+        settings[:language] = "Chinese"
+        @setting.dump(settings, :flush => true)
+
+        settings = @alfred.setting.load
+        settings[:language].should == "Chinese"
+      end
+
+      after :all do
+        File.unlink(@setting.setting_file)
+      end
     end
 
-    after :all do
-      File.unlink(@setting.setting_file)
+    context "with Plist Backend" do
+      before :all do
+        @setting = @alfred.setting do
+          use_setting_file :format => 'plist'
+        end
+      end
+
+      it "should correctly load settings" do
+        settings = @setting.load
+        settings[:id].should == "me.zhaowu.alfred-workflow-gem"
+      end
+
+      it "should correctly save settings" do
+        settings = @setting.load
+        settings[:language] = "Chinese"
+        @setting.dump(settings, :flush => true)
+
+        settings = @alfred.setting.load
+        settings[:language].should == "Chinese"
+      end
+
+      after :all do
+        File.unlink(@setting.setting_file)
+      end
     end
 
   end
