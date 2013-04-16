@@ -4,11 +4,12 @@ require 'rubygems'
 require 'hoe'
 
 Hoe.plugin :bundler
-Hoe.plugin :test
 
 Hoe.plugin :git
 Hoe.plugin :gemspec
 Hoe.plugin :version
+Hoe.plugin :yard
+Hoe.plugin :travis
 
 Hoe.spec 'alfred-workflow' do
 
@@ -16,15 +17,15 @@ Hoe.spec 'alfred-workflow' do
 
   license 'GPL-3'
 
-
-
-  testlib = :minitest
   extra_deps << ['plist', '>= 3.1.0']
   extra_deps << ['logging', '>= 1.8.0']
 
+
+
+
   extra_dev_deps << ['rspec', '>= 2.13']
   extra_dev_deps << ['rake', '>= 10.0.0']
-  extra_dev_deps << ['hoe'] << ['hoe-gemspec'] << ['hoe-git'] << ['hoe-version'] << ['hoe-bundler']
+  extra_dev_deps << ['hoe'] << ['hoe-gemspec'] << ['hoe-git'] << ['hoe-version'] << ['hoe-bundler'] << << ['hoe-yard']
   extra_dev_deps << ['guard', '~> 1.7.0'] << ['guard-rspec'] << ['guard-bundler']
   extra_dev_deps << ['terminal-notifier-guard'] << ['growl'] << ['rb-fsevent', '~> 0.9']
 
