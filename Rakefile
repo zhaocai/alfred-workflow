@@ -2,6 +2,8 @@
 
 require 'rubygems'
 require 'hoe'
+require 'rake/clean'
+
 
 Hoe.plugin :bundler
 Hoe.plugin :git
@@ -22,6 +24,7 @@ Hoe.spec 'alfred-workflow' do
 
 
   extra_dev_deps << ['rspec', '>= 2.13']
+  extra_dev_deps << ['awesome_print', '>= 1.1.0']
   extra_dev_deps << ['facets', '>= 2.9.0']
   extra_dev_deps << ['rake', '>= 10.0.0']
   extra_dev_deps << ['hoe'] << ['hoe-gemspec'] << ['hoe-git'] << ['hoe-version'] << ['hoe-bundler'] << ['hoe-yard']
@@ -49,7 +52,9 @@ task :multirubies  do
   sh %q{bundle exec guard --group=multirubies}
 end
 
-
+CLOBBER.include('log')
+CLEAN.include('tmp')
+CLEAN.include('test/workflow/tmp')
 
 
 # vim: syntax=ruby

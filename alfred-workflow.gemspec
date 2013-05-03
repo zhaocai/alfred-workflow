@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = "alfred-workflow"
-  s.version = "1.7.0.20130502202146"
+  s.version = "1.8.0.20130503001927"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Zhao Cai"]
@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.description = "alfred-workflow is a ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow."
   s.email = ["caizhaoff@gmail.com"]
   s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.md", "History.txt"]
-  s.files = [".gemtest", ".rspec", ".ruby-version", ".travis.yml", "Gemfile", "Gemfile.lock", "Guardfile", "History.txt", "Manifest.txt", "README.md", "Rakefile", "lib/alfred.rb", "lib/alfred/feedback.rb", "lib/alfred/feedback/file_item.rb", "lib/alfred/feedback/item.rb", "lib/alfred/setting.rb", "lib/alfred/ui.rb", "lib/alfred/version.rb", "spec/alfred_spec.rb", "spec/feedback_spec.rb", "spec/item_spec.rb", "spec/spec_helper.rb", "test/workflow/info.plist"]
+  s.files = [".rspec", ".ruby-version", "Gemfile", "Gemfile.lock", "Guardfile", "History.txt", "Manifest.txt", "README.md", "Rakefile", "alfred-workflow.gemspec", "lib/alfred.rb", "lib/alfred/feedback.rb", "lib/alfred/feedback/file_item.rb", "lib/alfred/feedback/item.rb", "lib/alfred/setting.rb", "lib/alfred/ui.rb", "lib/alfred/version.rb", "spec/alfred/feedback/item_spec.rb", "spec/alfred/feedback_spec.rb", "spec/alfred/setting_spec.rb", "spec/alfred/ui_spec.rb", "spec/alfred_spec.rb", "spec/spec_helper.rb", "test/workflow/info.plist", ".gemtest"]
   s.homepage = "http://zhaocai.github.com/alfred2-ruby-template/"
   s.licenses = ["GPL-3"]
   s.rdoc_options = ["--title", "TestAlfred::TestWorkflow Documentation", "--quiet"]
@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<plist>, [">= 3.1.0"])
       s.add_development_dependency(%q<hoe-yard>, [">= 0.1.2"])
       s.add_development_dependency(%q<rspec>, [">= 2.13"])
+      s.add_development_dependency(%q<awesome_print>, [">= 1.1.0"])
       s.add_development_dependency(%q<facets>, [">= 2.9.0"])
       s.add_development_dependency(%q<rake>, [">= 10.0.0"])
       s.add_development_dependency(%q<hoe>, [">= 0"])
@@ -44,6 +45,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<plist>, [">= 3.1.0"])
       s.add_dependency(%q<hoe-yard>, [">= 0.1.2"])
       s.add_dependency(%q<rspec>, [">= 2.13"])
+      s.add_dependency(%q<awesome_print>, [">= 1.1.0"])
       s.add_dependency(%q<facets>, [">= 2.9.0"])
       s.add_dependency(%q<rake>, [">= 10.0.0"])
       s.add_dependency(%q<hoe>, [">= 0"])
@@ -61,6 +63,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<plist>, [">= 3.1.0"])
     s.add_dependency(%q<hoe-yard>, [">= 0.1.2"])
     s.add_dependency(%q<rspec>, [">= 2.13"])
+    s.add_dependency(%q<awesome_print>, [">= 1.1.0"])
     s.add_dependency(%q<facets>, [">= 2.9.0"])
     s.add_dependency(%q<rake>, [">= 10.0.0"])
     s.add_dependency(%q<hoe>, [">= 0"])

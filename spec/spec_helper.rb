@@ -1,8 +1,8 @@
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
 require "rspec"
-require 'facets/string'
 require 'fileutils'
+require 'awesome_print'
 
 
 require "alfred"

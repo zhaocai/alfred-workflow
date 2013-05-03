@@ -67,12 +67,19 @@ module Alfred
   end
 
   class Core
-    attr_accessor :with_rescue_feedback
+    attr_reader :with_rescue_feedback
+    attr_accessor :with_help_feedback
 
-    def initialize(with_rescue_feedback = false, &blk)
+    def initialize(
+      with_help_feedback = false, 
+      with_rescue_feedback = false, 
+      &blk
+    )
       @with_rescue_feedback = with_rescue_feedback
+      @with_help_feedback = with_rescue_feedback
 
       instance_eval(&blk) if block_given?
+
     end
 
     def ui
@@ -82,6 +89,10 @@ module Alfred
 
     def setting(&blk)
       @setting ||= Setting.new(self, &blk)
+    end
+
+    def workflow_setting(opts = {})
+      @workflow_setting ||= init_workflow_setting(opts)
     end
 
     def with_cached_feedback(&blk)
@@ -122,6 +133,15 @@ module Alfred
     end
 
 
+    def help_feedback(opts = {})
+      ws = workflow_setting.load
+      if ws.has_key?(:help)
+        help_settings = ws[:help]
+        puts help_settings
+      end
+    end
+
+
     def rescue_feedback(opts = {})
       default_opts = {
         :title    => "Failed Query!",
@@ -141,6 +161,20 @@ module Alfred
       feedback.to_alfred('', items)
     end
 
+    private
+
+    def init_workflow_setting(opts)
+      default_opts = {
+        :file    => "settings.yaml",
+        :format  => 'yaml',
+      }
+      opts = default_opts.update(opts)
+
+      @workflow_setting = Setting.new(self) do
+        use_setting_file opts
+      end
+      @workflow_setting
+    end
 
   end
 
