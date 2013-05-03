@@ -2,7 +2,7 @@ require 'rubygems' unless defined? Gem # rubygems is only needed in 1.8
 
 require 'plist'
 require 'fileutils'
-require "yaml"
+require 'yaml'
 
 require 'alfred/ui'
 require 'alfred/feedback'
@@ -69,13 +69,15 @@ module Alfred
   class Core
     attr_accessor :with_rescue_feedback
 
-    def initialize(with_rescue_feedback = false)
+    def initialize(with_rescue_feedback = false, &blk)
       @with_rescue_feedback = with_rescue_feedback
+
+      instance_eval(&blk) if block_given?
     end
 
     def ui
       raise NoBundleIDError unless bundle_id
-      @ui ||= Logger.new(bundle_id)
+      @ui ||= LogUI.new(bundle_id)
     end
 
     def setting(&blk)
@@ -134,7 +136,7 @@ module Alfred
 
       items = []
       items << Feedback::Item.new(opts[:title], opts)
-      items << Feedback::FileItem.new(ui.logger_file)
+      items << Feedback::FileItem.new(ui.log_file)
 
       feedback.to_alfred('', items)
     end

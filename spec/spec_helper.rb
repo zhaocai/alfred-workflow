@@ -1,6 +1,9 @@
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
 require "rspec"
+require 'facets/string'
+require 'fileutils'
+
 
 require "alfred"
 
@@ -22,6 +25,16 @@ class String
   end
 end
 
+$rspec_dir = Dir.pwd
+$workflow_dir = 'test/workflow/'
+def setup_workflow
+  FileUtils.mkdir_p($workflow_dir)
+  Dir.chdir($workflow_dir)
+end
+
+def reset_workflow
+  Dir.chdir($rspec_dir)
+end
 
 def compare_xml(expected_xml_data, feedback_xml_data)
   item_elements = %w{title subtitle icon}

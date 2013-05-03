@@ -1,49 +1,28 @@
-require 'logging'
+require 'logger'
+require 'fileutils'
 
 module Alfred
 
-  class Logger
-    def initialize(id)
-      @id = id
+  class LogUI < ::Logger
+    attr_reader :logdev
+
+    def initialize(id, to_file=nil)
+      if to_file
+        @log_file = to_file
+        log_dir = File.dirname(log_file)
+        FileUtils.mkdir_p log_dir unless File.exists? log_dir
+      end
+
+      super log_file, 'weekly'
+
+      @progname = id
+      @default_formatter.datetime_format = '%Y-%m-%d %H:%M:%S '
     end
 
-    def info(msg)
-      logger.info msg
-    end
-    def warn(msg)
-      logger.warn msg
-    end
-    def debug(msg)
-      logger.debug msg
-    end
-    def error(msg)
-      logger.error msg
-    end
-    def fatal(msg)
-      logger.fatal msg
-    end
-
-    def logger
-      @logger ||= init_log
-    end
-
-    def logger_file
-      @logger_file ||= File.expand_path("~/Library/Logs/Alfred-Workflow.log")
-    end
-
-    private
-
-    def init_log
-      @logger = Logging.logger[@id]
-      @logger.level = :debug
-      @logger.add_appenders(
-        Logging.appenders.file(logger_file)
-      )
-      @logger
+    def log_file
+      @log_file ||= File.expand_path("~/Library/Logs/Alfred-Workflow.log")
     end
   end
 
-
 end
-
 
