@@ -17,14 +17,9 @@ describe "Alfred" do
     end
 
     it "should have correct default setting file" do
-      @alfred.workflow_setting.setting_file.should eq 'settings.yaml'
-      ap @alfred.help_feedback
+      @alfred.workflow_setting.setting_file.should eq 'setting.yaml'
     end
 
-
-    it "should generate url feedback" do
-      # puts @alfred.help_feedback.shoe
-    end
 
   end
 

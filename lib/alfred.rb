@@ -55,6 +55,9 @@ module Alfred
       end
     end
 
+    def workflow_folder
+      Dir.pwd
+    end
 
     # launch alfred with query
     def search(query = "")
@@ -75,6 +78,7 @@ module Alfred
       with_rescue_feedback = false, 
       &blk
     )
+      @workflow_dir = Dir.pwd
       @with_rescue_feedback = with_rescue_feedback
       @with_help_feedback = with_rescue_feedback
 
@@ -135,9 +139,14 @@ module Alfred
 
     def help_feedback(opts = {})
       ws = workflow_setting.load
-      if ws.has_key?(:help)
-        help_settings = ws[:help]
-        puts help_settings
+      if ws.has_key? :help
+        ws[:help].map do |item|
+          case item[:kind]
+          when 'url'
+            item[:folder] = storage_path
+            Feedback::UrlItem.new(item)
+          end
+        end
       end
     end
 
@@ -165,7 +174,7 @@ module Alfred
 
     def init_workflow_setting(opts)
       default_opts = {
-        :file    => "settings.yaml",
+        :file    => "setting.yaml",
         :format  => 'yaml',
       }
       opts = default_opts.update(opts)

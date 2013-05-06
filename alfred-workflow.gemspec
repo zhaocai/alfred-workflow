@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = "alfred-workflow"
-  s.version = "1.8.0.20130503001927"
+  s.version = "1.8.0.20130503002346"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Zhao Cai"]
@@ -35,7 +35,6 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<hoe-gemspec>, [">= 0"])
       s.add_development_dependency(%q<hoe-git>, [">= 0"])
       s.add_development_dependency(%q<hoe-version>, [">= 0"])
-      s.add_development_dependency(%q<hoe-bundler>, [">= 0"])
       s.add_development_dependency(%q<guard>, ["~> 1.7.0"])
       s.add_development_dependency(%q<guard-rspec>, [">= 0"])
       s.add_development_dependency(%q<guard-bundler>, [">= 0"])
@@ -52,7 +51,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<hoe-gemspec>, [">= 0"])
       s.add_dependency(%q<hoe-git>, [">= 0"])
       s.add_dependency(%q<hoe-version>, [">= 0"])
-      s.add_dependency(%q<hoe-bundler>, [">= 0"])
       s.add_dependency(%q<guard>, ["~> 1.7.0"])
       s.add_dependency(%q<guard-rspec>, [">= 0"])
       s.add_dependency(%q<guard-bundler>, [">= 0"])
@@ -70,7 +68,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<hoe-gemspec>, [">= 0"])
     s.add_dependency(%q<hoe-git>, [">= 0"])
     s.add_dependency(%q<hoe-version>, [">= 0"])
-    s.add_dependency(%q<hoe-bundler>, [">= 0"])
     s.add_dependency(%q<guard>, ["~> 1.7.0"])
     s.add_dependency(%q<guard-rspec>, [">= 0"])
     s.add_dependency(%q<guard-bundler>, [">= 0"])

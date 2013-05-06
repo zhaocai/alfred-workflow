@@ -26,7 +26,7 @@ class String
 end
 
 $rspec_dir = Dir.pwd
-$workflow_dir = 'test/workflow/'
+$workflow_dir = File.expand_path('test/workflow/')
 def setup_workflow
   FileUtils.mkdir_p($workflow_dir)
   Dir.chdir($workflow_dir)

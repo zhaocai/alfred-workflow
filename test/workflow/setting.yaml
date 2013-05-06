@@ -1,6 +1,8 @@
 --- 
 :id: me.zhaowu.alfred-workflow-gem
 :help: 
-- :homepage: 
-    :kind: url
+  - :kind: url
+    :title: Homepage
+    :webloc: homepage.webloc
     :url: https://github.com/zhaocai/alfred-workflow
+  - :kind: url

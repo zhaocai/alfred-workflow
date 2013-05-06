@@ -5,7 +5,7 @@ module Alfred
   class Feedback
     class FileItem < Item
 
-      def initialize(path)
+      def initialize(path, opts = {})
         if ['.ennote', '.webbookmark'].include? File.extname(path)
           @title = %x{mdls -name kMDItemDisplayName -raw '#{path}'}
         else
@@ -27,3 +27,4 @@ module Alfred
     end
   end
 end
+

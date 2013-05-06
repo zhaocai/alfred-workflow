@@ -1,12 +1,13 @@
 PATH
   remote: .
   specs:
-    alfred-workflow (1.7.0.20130502202146)
+    alfred-workflow (1.8.0.20130503002346)
       plist (>= 3.1.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    awesome_print (1.1.0)
     coderay (1.0.9)
     diff-lcs (1.2.4)
     facets (2.9.3)
@@ -27,8 +28,6 @@ GEM
       rspec (~> 2.11)
     hoe (3.6.0)
       rake (>= 0.8, < 11.0)
-    hoe-bundler (1.2.0)
-      hoe (>= 2.2.0)
     hoe-gemspec (1.0.0)
       hoe (>= 2.2.0)
     hoe-git (1.5.0)
@@ -71,13 +70,13 @@ PLATFORMS
 
 DEPENDENCIES
   alfred-workflow!
+  awesome_print (>= 1.1.0)
   facets (>= 2.9.0)
   growl
   guard (~> 1.7.0)
   guard-bundler
   guard-rspec
   hoe
-  hoe-bundler
   hoe-gemspec
   hoe-git
   hoe-version
