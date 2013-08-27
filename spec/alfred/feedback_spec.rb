@@ -24,8 +24,9 @@ describe "Feedback" do
       xml_data = <<-END.strip_heredoc
       <?xml version="1.0"?>
       <items>
-        <item valid="yes" arg="arg" autocomplete="autocomplete" uid="uid">
+        <item valid="yes" autocomplete="autocomplete" uid="uid">
           <title>Title</title>
+          <arg>Arg</arg>
           <subtitle>Subtitle</subtitle>
           <icon>icon.png</icon>
         </item>
@@ -71,8 +72,9 @@ describe "Feedback" do
         @xml_data = <<-END.strip_heredoc
         <?xml version="1.0"?>
         <items>
-          <item valid="yes" arg="arg" autocomplete="autocomplete" uid="uid">
+          <item valid="yes" autocomplete="autocomplete" uid="uid">
             <title>Title</title>
+            <arg>Arg</arg>
             <subtitle>Subtitle</subtitle>
             <icon>icon.png</icon>
           </item>

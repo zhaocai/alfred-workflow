@@ -96,13 +96,13 @@ module Alfred
         xml_element = REXML::Element.new('item')
         xml_element.add_attributes({
           'uid'          => @uid,
-          'arg'          => @arg,
           'valid'        => @valid,
           'autocomplete' => @autocomplete
         })
         xml_element.add_attributes('type' => 'file') if @type == "file"
 
         REXML::Element.new("title", xml_element).text    = @title
+        REXML::Element.new("arg", xml_element).text      = @arg
         REXML::Element.new("subtitle", xml_element).text = @subtitle
 
         icon = REXML::Element.new("icon", xml_element)
