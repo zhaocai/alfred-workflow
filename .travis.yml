@@ -1,4 +1,4 @@
---- 
+---
 language: ruby
 rvm:
   - 1.8.7
@@ -15,12 +15,10 @@ rvm:
 branches:
   only:
     - master
-notifications: 
+notifications:
   recipients:
   - caizhaoff@gmail.com
-before_script: 
+before_script:
 - gem install hoe-travis --no-rdoc --no-ri
-- rake travis:before -t
-after_script: 
-- rake travis:after -t
-script: rake
+after_script:
+script: rake spec
