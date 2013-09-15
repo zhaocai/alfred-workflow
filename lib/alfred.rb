@@ -70,7 +70,7 @@ module Alfred
   end
 
   class Core
-    attr_reader :with_rescue_feedback
+    attr_accessor :with_rescue_feedback
     attr_accessor :with_help_feedback
 
     def initialize(
