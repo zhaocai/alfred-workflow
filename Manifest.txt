@@ -12,8 +12,10 @@ lib/alfred.rb
 lib/alfred/feedback.rb
 lib/alfred/feedback/file_item.rb
 lib/alfred/feedback/item.rb
+lib/alfred/feedback/webloc_item.rb
 lib/alfred/setting.rb
 lib/alfred/ui.rb
+lib/alfred/util.rb
 lib/alfred/version.rb
 spec/alfred/feedback/item_spec.rb
 spec/alfred/feedback_spec.rb
@@ -22,3 +24,4 @@ spec/alfred/ui_spec.rb
 spec/alfred_spec.rb
 spec/spec_helper.rb
 test/workflow/info.plist
+test/workflow/setting.yaml
