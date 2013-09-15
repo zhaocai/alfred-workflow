@@ -36,6 +36,29 @@ describe "Feedback" do
       compare_xml(xml_data, @feedback.to_xml).should == true
     end
 
+    it "should not have uid if not presented" do
+
+      @feedback.items = []
+      @feedback.add_item(:arg          => "arg"          ,
+                         :autocomplete => "autocomplete" ,
+                         :title        => "Title"        ,
+                         :subtitle     => "Subtitle")
+
+      xml_data = <<-END.strip_heredoc
+      <?xml version="1.0"?>
+      <items>
+        <item valid="yes" autocomplete="autocomplete">
+          <title>Title</title>
+          <arg>Arg</arg>
+          <subtitle>Subtitle</subtitle>
+          <icon>icon.png</icon>
+        </item>
+      </items>
+      END
+
+      compare_xml(xml_data, @feedback.to_xml).should == true
+    end
+
   end
 
   context "Cached Feedback" do

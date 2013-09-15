@@ -18,7 +18,7 @@ module Alfred
         if opts[:uid]
           @uid    = opts[:uid]
         else
-          @uid    = ''
+          @uid    = nil
         end
 
         if opts[:arg]
@@ -94,11 +94,19 @@ module Alfred
 
       def to_xml
         xml_element = REXML::Element.new('item')
-        xml_element.add_attributes({
-          'uid'          => @uid,
-          'valid'        => @valid,
-          'autocomplete' => @autocomplete
-        })
+        if @uid
+          xml_element.add_attributes({
+            'uid'          => @uid,
+            'valid'        => @valid,
+            'autocomplete' => @autocomplete
+          })
+        else
+          xml_element.add_attributes({
+            'valid'        => @valid,
+            'autocomplete' => @autocomplete
+          })
+          
+        end
         xml_element.add_attributes('type' => 'file') if @type == "file"
 
         REXML::Element.new("title", xml_element).text    = @title
