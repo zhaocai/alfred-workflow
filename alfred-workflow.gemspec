@@ -2,12 +2,12 @@
 
 Gem::Specification.new do |s|
   s.name = "alfred-workflow"
-  s.version = "1.8.0.20130503002346"
+  s.version = "1.9.1.20130915122611"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Zhao Cai"]
   s.cert_chain = ["/Users/zhaocai/.gem/gem-public_cert.pem"]
-  s.date = "2013-05-03"
+  s.date = "2013-09-15"
   s.description = "alfred-workflow is a ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow."
   s.email = ["caizhaoff@gmail.com"]
   s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.md", "History.txt"]
@@ -35,6 +35,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<hoe-gemspec>, [">= 0"])
       s.add_development_dependency(%q<hoe-git>, [">= 0"])
       s.add_development_dependency(%q<hoe-version>, [">= 0"])
+      s.add_development_dependency(%q<hoe-travis>, [">= 0"])
       s.add_development_dependency(%q<guard>, ["~> 1.7.0"])
       s.add_development_dependency(%q<guard-rspec>, [">= 0"])
       s.add_development_dependency(%q<guard-bundler>, [">= 0"])
@@ -51,6 +52,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<hoe-gemspec>, [">= 0"])
       s.add_dependency(%q<hoe-git>, [">= 0"])
       s.add_dependency(%q<hoe-version>, [">= 0"])
+      s.add_dependency(%q<hoe-travis>, [">= 0"])
       s.add_dependency(%q<guard>, ["~> 1.7.0"])
       s.add_dependency(%q<guard-rspec>, [">= 0"])
       s.add_dependency(%q<guard-bundler>, [">= 0"])
@@ -68,6 +70,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<hoe-gemspec>, [">= 0"])
     s.add_dependency(%q<hoe-git>, [">= 0"])
     s.add_dependency(%q<hoe-version>, [">= 0"])
+    s.add_dependency(%q<hoe-travis>, [">= 0"])
     s.add_dependency(%q<guard>, ["~> 1.7.0"])
     s.add_dependency(%q<guard-rspec>, [">= 0"])
     s.add_dependency(%q<guard-bundler>, [">= 0"])

@@ -26,7 +26,7 @@ Hoe.spec 'alfred-workflow' do
   extra_dev_deps << ['awesome_print', '>= 1.1.0']
   extra_dev_deps << ['facets', '>= 2.9.0']
   extra_dev_deps << ['rake', '>= 10.0.0']
-  extra_dev_deps << ['hoe'] << ['hoe-gemspec'] << ['hoe-git'] << ['hoe-version'] << ['hoe-yard']
+  extra_dev_deps << ['hoe'] << ['hoe-gemspec'] << ['hoe-git'] << ['hoe-version'] << ['hoe-yard'] << ['hoe-travis']
   extra_dev_deps << ['guard', '~> 1.7.0'] << ['guard-rspec'] << ['guard-bundler']
   extra_dev_deps << ['terminal-notifier-guard'] << ['growl']
 
