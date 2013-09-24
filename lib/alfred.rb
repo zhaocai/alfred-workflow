@@ -65,8 +65,21 @@ module Alfred
       tell application "Alfred 2"
         search "#{query.gsub('"','\"')}"
       end tell
-      __APPLESCRIPT__}
+__APPLESCRIPT__}
     end
+
+    def front_appname
+      %x{osascript <<__APPLESCRIPT__
+      name of application (path to frontmost application as text)
+__APPLESCRIPT__}.chop
+    end
+
+    def front_appid
+      %x{osascript <<__APPLESCRIPT__
+      id of application (path to frontmost application as text)
+__APPLESCRIPT__}.chop
+    end
+
   end
 
   class Core
@@ -74,8 +87,8 @@ module Alfred
     attr_accessor :with_help_feedback
 
     def initialize(
-      with_help_feedback = false, 
-      with_rescue_feedback = false, 
+      with_help_feedback = false,
+      with_rescue_feedback = false,
       &blk
     )
       @workflow_dir = Dir.pwd
