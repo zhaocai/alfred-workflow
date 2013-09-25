@@ -105,13 +105,20 @@ module Alfred
             'valid'        => @valid,
             'autocomplete' => @autocomplete
           })
-          
+
         end
         xml_element.add_attributes('type' => 'file') if @type == "file"
 
         REXML::Element.new("title", xml_element).text    = @title
-        REXML::Element.new("arg", xml_element).text      = @arg
         REXML::Element.new("subtitle", xml_element).text = @subtitle
+
+        if @arg.is_a?(Hash)
+          arg_element = REXML::Element.new("arg", xml_element)
+          arg_element.text = @arg.delete(:text)
+          arg_element.add_attributes(@arg)
+        else
+        REXML::Element.new("arg", xml_element).text      = @arg
+        end
 
         icon = REXML::Element.new("icon", xml_element)
         icon.text = @icon[:name]
