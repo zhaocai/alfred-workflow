@@ -61,7 +61,6 @@ module Alfred
     def cache_file
       @cf_file ||= File.join(@core.volatile_storage_path, "cached_feedback")
     end
-
     def get_cached_feedback
       return nil unless File.exist?(cache_file)
       if @cf_file_valid_time
