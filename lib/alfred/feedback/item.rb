@@ -12,52 +12,55 @@ module Alfred
         if opts[:icon]
           @icon    = opts[:icon]
         else
-          @icon    = {:type => "default", :name => "icon.png"}
+          @icon  ||= {:type => "default", :name => "icon.png"}
         end
 
         if opts[:uid]
           @uid    = opts[:uid]
-        else
-          @uid    = nil
         end
 
         if opts[:arg]
           @arg    = opts[:arg]
         else
-          @arg    = @title
+          @arg  ||= @title
         end
 
         if opts[:type]
           @type    = opts[:type]
         else
-          @type    = 'default'
+          @type  ||= 'default'
         end
 
         if opts[:valid]
           @valid    = opts[:valid]
         else
-          @valid    = 'yes'
+          @valid  ||= 'yes'
         end
 
         if opts[:autocomplete]
           @autocomplete    = opts[:autocomplete]
         end
+
+        if opts[:match?]
+          @matcher   = opts[:match?].to_sym
+        else
+          @matcher ||= :title_match?
+        end
       end
 
-      ## To customize a new match? function, overwrite it.
+      ## To customize a new matcher?, define it.
       #
       # Module Alfred
       #   class Feedback
       #     class Item
-      #       alias_method :default_match?, :match?
-      #       def match?(query)
-      #         # define new match? function here
+      #       def your_match?(query)
+      #         # define new matcher here
       #       end
       #     end
       #   end
       # end
       def match?(query)
-        title_match?(query)
+        send(@matcher, query)
       end
 
       def title_match?(query)
@@ -105,7 +108,7 @@ module Alfred
             'valid'        => @valid,
             'autocomplete' => @autocomplete
           })
-          
+
         end
         xml_element.add_attributes('type' => 'file') if @type == "file"
 
@@ -125,7 +128,7 @@ module Alfred
       def build_regexp(query, option)
         begin
           Regexp.compile(".*#{query.gsub(/\s+/,'.*')}.*", option)
-        rescue RegexpError => e
+        rescue RegexpError
           Regexp.compile(".*#{Regexp.escape(query)}.*", option)
         end
       end

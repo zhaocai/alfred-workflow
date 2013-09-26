@@ -18,6 +18,8 @@ module Alfred
         @valid = 'yes'
         @autocomplete = @title
         @type = 'file'
+
+        super @title, opts
       end
 
       def match?(query)

@@ -33,6 +33,7 @@ alfred-workflow is a ruby Gem helper for building [Alfred](http://www.alfredapp.
 
 * [alfred2-top-workflow]( https://github.com/zhaocai/alfred2-top-workflow )
 * [alfred2-google-workflow]( https://github.com/zhaocai/alfred2-google-workflow )
+* [alfred2-keylue-workflow]( https://github.com/zhaocai/alfred2-keylue-workflow )
 * [alfred2-sourcetree-workflow]( https://github.com/zhaocai/alfred2-sourcetree-workflow )
 
 ## SYNOPSIS:
@@ -76,7 +77,7 @@ Alfred.with_friendly_error do |alfred|
 end
 ```
 
-![rescue feedback](https://raw.github.com/zhaocai/alfred2-ruby-template/master/screenshots/rescue%20feedback.png)
+![](https://raw.github.com/zhaocai/alfred2-ruby-template/master/screenshots/rescue%20feedback.png)
 
 
 ### Automate saving and loading cached feedback
@@ -104,8 +105,37 @@ Alfred.with_friendly_error do |alfred|
 end
 ```
 
+### Customize feedback item matcher
 
+```ruby
+fb = alfred.feedback
+fb.add_item(:uid          => "uid"          ,
+            :arg          => "arg"          ,
+            :autocomplete => "autocomplete" ,
+            :title        => "Title"        ,
+            :subtitle     => "Subtitle"     ,
+            :match?       => :all_title_match?)
 
+fb.add_file_item(File.expand_path "~/Applications/", :match? => :all_title_match?)
+```
+
+`:title_match?` and `:all_title_match?` are built in.
+
+To define your new matcher
+```ruby
+Module Alfred
+  class Feedback
+    class Item
+      # define new matcher function here
+      def your_match?(query)
+        return true
+      end
+    end
+  end
+end
+```
+
+Check the code in [alfred/feedback/item.rb]( https://github.com/zhaocai/alfred-workflow/blob/master/lib/alfred/feedback/item.rb#L63 ) for more information.
 
 
 

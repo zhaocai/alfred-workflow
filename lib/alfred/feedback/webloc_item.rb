@@ -10,11 +10,11 @@ module Alfred
           opts[:webloc] = ::Alfred::Util.make_webloc(
             opts[:title], opts[:url], File.dirname(opts[:webloc]))
         end
-        super opts[:webloc], opts
 
-        @title = title if title
         @subtitle = opts[:url]
         @uid = opts[:url]
+
+        super title, opts
       end
 
     end

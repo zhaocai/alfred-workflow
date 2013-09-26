@@ -22,8 +22,14 @@ module Alfred
 
     def to_xml(with_query = '', items = @items)
       document = REXML::Element.new("items")
-      items.each do |item|
-        document << item.to_xml if item.match?(with_query)
+      if with_query.empty?
+        items.each do |item|
+          document << item.to_xml
+        end
+      else
+        items.each do |item|
+          document << item.to_xml if item.match?(with_query)
+        end
       end
       document.to_s
     end
