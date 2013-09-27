@@ -40,13 +40,11 @@ module Alfred
 
     # serialize
     def dump(to_file)
-      File.open(to_file, "wb") { |f| Marshal.dump(self, f) }
+      File.open(to_file, "wb") { |f| Marshal.dump(@items, f) }
     end
 
-    class << self
       def load(from_file)
-        File.open(from_file, "rb") { |f| Marshal.load(f) }
-      end
+      @items = File.open(from_file, "rb") { |f| Marshal.load(f) }
     end
   end
 
@@ -72,7 +70,8 @@ module Alfred
       if @cf_file_valid_time
         return nil if Time.now - File.ctime(cache_file) > @cf_file_valid_time
       end
-      Feedback.load(@cf_file)
+      load(@cf_file)
+      return self
     end
 
     def put_cached_feedback

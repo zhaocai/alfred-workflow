@@ -86,17 +86,14 @@ __APPLESCRIPT__}.chop
     attr_accessor :with_rescue_feedback
     attr_accessor :with_help_feedback
 
-    def initialize(
-      with_help_feedback = false,
-      with_rescue_feedback = false,
-      &blk
-    )
+    def initialize(with_help_feedback = false,
+                   with_rescue_feedback = false,
+                   &blk)
       @workflow_dir = Dir.pwd
       @with_rescue_feedback = with_rescue_feedback
       @with_help_feedback = with_rescue_feedback
 
       instance_eval(&blk) if block_given?
-
     end
 
     def ui
