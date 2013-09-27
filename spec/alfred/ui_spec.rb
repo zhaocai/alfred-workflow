@@ -5,7 +5,7 @@ describe "UI" do
   before :all do
     setup_workflow
     @alfred = Alfred::Core.new do |a|
-      @ui = Alfred::LogUI.new(bundle_id)
+      @ui = Alfred::LogUI.new(bundle_id, "/tmp/#{bundle_id}.log")
     end
   end
 
