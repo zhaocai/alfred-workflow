@@ -6,7 +6,9 @@ module Alfred
     class FileItem < Item
 
       def initialize(path, opts = {})
-        if ['.ennote', '.webbookmark'].include? File.extname(path)
+        if opts[:title]
+          @title = opts[:title]
+        elsif ['.ennote', '.webbookmark'].include? File.extname(path)
           @title = %x{mdls -name kMDItemDisplayName -raw '#{path}'}
         else
           @title = File.basename(path)
