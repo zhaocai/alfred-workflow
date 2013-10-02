@@ -16,8 +16,8 @@ module Alfred
       @items << Item.new(opts[:title], opts)
     end
 
-    def add_file_item(path)
-      @items << FileItem.new(path)
+    def add_file_item(path, opts = {})
+      @items << FileItem.new(path, opts)
     end
 
     def to_xml(with_query = '', items = @items)
@@ -43,7 +43,7 @@ module Alfred
       File.open(to_file, "wb") { |f| Marshal.dump(@items, f) }
     end
 
-      def load(from_file)
+    def load(from_file)
       @items = File.open(from_file, "rb") { |f| Marshal.load(f) }
     end
   end
