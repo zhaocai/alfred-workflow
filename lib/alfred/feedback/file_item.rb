@@ -8,8 +8,8 @@ module Alfred
       def initialize(path, opts = {})
         if opts[:title]
           @title = opts[:title]
-        elsif ['.ennote', '.webbookmark'].include? File.extname(path)
-          @title = %x{mdls -name kMDItemDisplayName -raw '#{path}'}
+        elsif ['.ennote', '.webbookmark', '.vcf', '.abcdp', '.olk14Contact'].include? File.extname(path)
+          @title = %x{/usr/bin/mdls -name kMDItemDisplayName -raw '#{path}'}
         else
           @title = File.basename(path)
         end

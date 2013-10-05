@@ -46,6 +46,10 @@ module Alfred
     def load(from_file)
       @items = File.open(from_file, "rb") { |f| Marshal.load(f) }
     end
+
+    def append(from_file)
+      @items << File.open(from_file, "rb") { |f| Marshal.load(f) }
+    end
   end
 
 
