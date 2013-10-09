@@ -39,62 +39,65 @@ module Alfred
       @backend.send(:load)
     end
 
-    def dump(settings = nil, opts = {})
-      @backend.send(:dump, settings, opts)
+    def dump(object, opts = {})
+      @backend.send(:dump, object, opts)
     end
 
-    class YamlEnd
-      attr_reader :setting_file
+
+
+    class BackEnd
       def initialize(alfred, file)
         @core = alfred
-        @setting_file = file
+        @backend_file = file
+
+        unless File.exist?(@backend_file)
+          settings = {:id => @core.bundle_id}
+          dump(settings, :flush => true)
+        end
       end
 
       def load
-        unless File.exist?(setting_file)
-          @settings = {:id => @core.bundle_id}
-          dump
-        end
-
-        @settings = YAML::load( File.read(setting_file) )
+        raise NotImplementedError
       end
 
-      def dump(settings = nil, opts = {})
-        settings = @settings unless settings
+      def dump(object, opts = {})
+        raise NotImplementedError
+      end
+    end
 
-        File.open(setting_file, "wb") { |f|
-          YAML::dump(settings, f)
+    class YamlEnd < BackEnd
+      def initialize(alfred, file)
+        super
+      end
+
+      def load
+        YAML::load_file(@backend_file)
+      end
+
+      def dump(object, opts = {})
+        File.open(@backend_file, File::WRONLY|File::TRUNC|File::CREAT) { |f|
+          YAML::dump(object, f)
           f.flush if opts[:flush]
         }
       end
     end
 
-    class PlistEnd
-      attr_reader :setting_file
+    class PlistEnd < BackEnd
       def initialize(alfred, file)
-        @core = alfred
-        @setting_file = file
+        super
       end
 
       def load
-        unless File.exist?(setting_file)
-          @settings = {:id => @core.bundle_id}
-          dump
-        end
-
-        @settings = Plist::parse_xml( File.read(setting_file) )
+        Plist::parse_xml( File.read(@backend_file) )
       end
 
-      def dump(settings = nil, opts = {})
-        settings = @settings unless settings
-
-        File.open(setting_file, "wb") { |f|
-          f.puts settings.to_plist
+      def dump(object, opts = {})
+        File.open(@backend_file, File::WRONLY|File::TRUNC|File::CREAT) { |f|
+          f.puts object.to_plist
           f.flush if opts[:flush]
         }
       end
     end
-
 
   end
 end
