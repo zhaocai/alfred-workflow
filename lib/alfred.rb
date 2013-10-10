@@ -3,6 +3,8 @@ require 'rubygems' unless defined? Gem # rubygems is only needed in 1.8
 require 'plist'
 require 'fileutils'
 require 'yaml'
+require 'optparse'
+require 'ostruct'
 
 require 'alfred/ui'
 require 'alfred/feedback'
@@ -18,6 +20,7 @@ module Alfred
 
   class ObjCError           < AlfredError; status_code(1) ; end
   class NoBundleIDError     < AlfredError; status_code(2) ; end
+  class InvalidArgument     < AlfredError; status_code(10) ; end
   class InvalidFormat       < AlfredError; status_code(11) ; end
   class NoMethodError       < AlfredError; status_code(13) ; end
   class PathError           < AlfredError; status_code(14) ; end
@@ -26,13 +29,22 @@ module Alfred
 
     def with_friendly_error(alfred = Alfred::Core.new, &blk)
       begin
+
         yield alfred
+        alfred.start
+
       rescue AlfredError => e
         alfred.ui.error e.message
         alfred.ui.debug e.backtrace.join("\n")
         puts alfred.rescue_feedback(
           :title => "#{e.class}: #{e.message}") if alfred.with_rescue_feedback
         exit e.status_code
+      rescue OptionParser::InvalidOption, OptionParser::MissingArgument => e
+        alfred.ui.error e.message
+        alfred.ui.debug $!.to_s
+        alfred.ui.debug alfred.query_parser
+
+        exit e.status
       rescue Interrupt => e
         alfred.ui.error "\nQuitting..."
         alfred.ui.debug e.backtrace.join("\n")
@@ -86,6 +98,9 @@ __APPLESCRIPT__}.chop
     attr_accessor :with_rescue_feedback
     attr_accessor :with_help_feedback
 
+    attr_reader :handler_controller
+
+
     def initialize(with_help_feedback = false,
                    with_rescue_feedback = false,
                    &blk)
@@ -93,8 +108,45 @@ __APPLESCRIPT__}.chop
       @with_rescue_feedback = with_rescue_feedback
       @with_help_feedback = with_rescue_feedback
 
+      @handler_controller = ::Alfred::Handler::Controller.new
+
       instance_eval(&blk) if block_given?
     end
+
+
+    def start
+      # step 1: register option parser for handlers
+      @handler_controller.each do |handler|
+        handler.on_parser
+      end
+      query_parser.parse!
+
+      # step 2: dispatch options to handler for feedback or action
+      case options.mode
+      when :feedback
+        @handler_controller.each do |handler|
+          handler.on_feedback
+        end
+
+        puts feedback.to_alfred(ARGV)
+      when :action
+        @handler_controller.each do |handler|
+          handler.on_action
+        end
+      else
+        raise InvalidArgument, "#{options.mode} mode is not supported."
+      end
+
+    end
+
+    def options
+      @options ||= OpenStruct.new
+    end
+
+    def query_parser
+      @query_parser ||= init_query_parser
+    end
+
 
     def ui
       raise NoBundleIDError unless bundle_id
@@ -147,18 +199,7 @@ __APPLESCRIPT__}.chop
     end
 
 
-    def help_feedback(opts = {})
-      ws = workflow_setting.load
-      if ws.has_key? :help
-        ws[:help].map do |item|
-          case item[:kind]
-          when 'url'
-            item[:folder] = storage_path
-            Feedback::UrlItem.new(item)
-          end
-        end
-      end
-    end
+
 
 
     def rescue_feedback(opts = {})
@@ -180,22 +221,40 @@ __APPLESCRIPT__}.chop
       feedback.to_alfred('', items)
     end
 
+
     private
 
     def init_workflow_setting(opts)
       default_opts = {
-        :file    => "setting.yaml",
+        :file    => File.join(Alfred.workflow_folder, "setting.yaml"),
         :format  => 'yaml',
       }
       opts = default_opts.update(opts)
 
-      @workflow_setting = Setting.new(self) do
-        use_setting_file opts
+      Setting.new(self) do
+        @backend_file = opts[:file]
+        @formt = opts[:format]
       end
-      @workflow_setting
     end
 
-  end
 
+    def init_query_parser
+      options.mode = :feedback
+
+      OptionParser.new do |opts|
+        opts.separator ""
+        opts.separator "Built-in Options:"
+
+        opts.on("--mode [TYPE]", [:feedback, :action],
+                "Alfred handler working mode (feedback, action)") do |t|
+          options.mode = t
+        end
+
+        opts.separator ""
+        opts.separator "Handler Options:"
+      end
+
+    end
+  end
 end
 
