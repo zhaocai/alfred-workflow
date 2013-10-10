@@ -1,4 +1,7 @@
+require 'alfred/util'
+
 require 'set'
+require "rexml/document"
 
 module Alfred
 
@@ -33,14 +36,23 @@ module Alfred
         order <=> other.order
       end
 
-      private
+
+
+      # from alfred core
+      def xml_builder(arg)
+        @core.xml_builder(arg)
+      end
 
       def options
         @core.options
       end
 
-      def query_parser
+      def parser
         @core.query_parser
+      end
+
+      def query
+        @core.query
       end
 
       def feedback
@@ -50,9 +62,9 @@ module Alfred
 
 
     class Controller
-      ## handlers are called based on #order
-      # 1-10: critical handler
-      # 100:   base order
+      ## handlers are called based on handler.order
+      # 1-10 : critical handler
+      # 100  : base order
 
       include Enumerable
 

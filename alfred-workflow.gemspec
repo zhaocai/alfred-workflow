@@ -1,14 +1,13 @@
 # -*- encoding: utf-8 -*-
-# stub: alfred-workflow 1.11.3.20131009072715 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "alfred-workflow"
-  s.version = "1.11.3.20131009072715"
+  s.version = "1.11.3.20131010174001"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Zhao Cai"]
   s.cert_chain = ["/Users/zhaocai/.gem/gem-public_cert.pem"]
-  s.date = "2013-10-09"
+  s.date = "2013-10-10"
   s.description = "alfred-workflow is a ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow."
   s.email = ["caizhaoff@gmail.com"]
   s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.md", "History.txt"]
@@ -18,7 +17,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--title", "TestAlfred::TestWorkflow Documentation", "--quiet"]
   s.require_paths = ["lib"]
   s.rubyforge_project = "alfred-workflow"
-  s.rubygems_version = "2.1.4"
+  s.rubygems_version = "2.0.3"
   s.signing_key = "/Users/zhaocai/.gem/gem-private_key.pem"
   s.summary = "alfred-workflow is a ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow."
 
@@ -27,6 +26,8 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<plist>, [">= 3.1.0"])
+      s.add_runtime_dependency(%q<gyoku>, [">= 1.1.0"])
+      s.add_runtime_dependency(%q<nori>, [">= 2.3.0"])
       s.add_development_dependency(%q<hoe-yard>, [">= 0.1.2"])
       s.add_development_dependency(%q<rspec>, [">= 2.13"])
       s.add_development_dependency(%q<awesome_print>, [">= 1.1.0"])
@@ -44,6 +45,8 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<growl>, [">= 0"])
     else
       s.add_dependency(%q<plist>, [">= 3.1.0"])
+      s.add_dependency(%q<gyoku>, [">= 1.1.0"])
+      s.add_dependency(%q<nori>, [">= 2.3.0"])
       s.add_dependency(%q<hoe-yard>, [">= 0.1.2"])
       s.add_dependency(%q<rspec>, [">= 2.13"])
       s.add_dependency(%q<awesome_print>, [">= 1.1.0"])
@@ -62,6 +65,8 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<plist>, [">= 3.1.0"])
+    s.add_dependency(%q<gyoku>, [">= 1.1.0"])
+    s.add_dependency(%q<nori>, [">= 2.3.0"])
     s.add_dependency(%q<hoe-yard>, [">= 0.1.2"])
     s.add_dependency(%q<rspec>, [">= 2.13"])
     s.add_dependency(%q<awesome_print>, [">= 1.1.0"])

@@ -18,7 +18,7 @@ Hoe.spec 'alfred-workflow' do
   license 'GPL-3'
 
   extra_deps << ['plist', '>= 3.1.0']
-
+  extra_deps << ['gyoku', '>= 1.1.0'] << ['nori', '>= 2.3.0']
 
 
 

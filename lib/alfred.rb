@@ -5,6 +5,8 @@ require 'fileutils'
 require 'yaml'
 require 'optparse'
 require 'ostruct'
+require 'gyoku'
+require 'nori'
 
 require 'alfred/ui'
 require 'alfred/feedback'
@@ -99,6 +101,7 @@ __APPLESCRIPT__}.chop
     attr_accessor :with_help_feedback
 
     attr_reader :handler_controller
+    attr_reader :query
 
 
     def initialize(with_help_feedback = false,
@@ -120,6 +123,7 @@ __APPLESCRIPT__}.chop
         handler.on_parser
       end
       query_parser.parse!
+      @query = ARGV
 
       # step 2: dispatch options to handler for feedback or action
       case options.mode
@@ -128,10 +132,17 @@ __APPLESCRIPT__}.chop
           handler.on_feedback
         end
 
-        puts feedback.to_alfred(ARGV)
+        puts feedback.to_alfred(@query)
       when :action
+        arg = @query
+        if @query.length == 1
+          if hsh = xml_parser(@query[0])
+            arg = hsh
+          end
+        end
+
         @handler_controller.each do |handler|
-          handler.on_action
+          handler.on_action(arg)
         end
       else
         raise InvalidArgument, "#{options.mode} mode is not supported."
@@ -147,6 +158,20 @@ __APPLESCRIPT__}.chop
       @query_parser ||= init_query_parser
     end
 
+    def xml_parser(xml)
+      @xml_parser ||= Nori.new(:parser => :rexml,
+                               :convert_tags_to => lambda { |tag| tag.to_sym })
+      begin
+        hsh = @xml_parser.parse(xml)
+        return hsh[:root]
+      rescue REXML::ParseException, Nokogiri::XML::SyntaxError
+        return nil
+      end
+    end
+
+    def xml_builder(arg)
+      Gyoku.xml(:root => arg)
+    end
 
     def ui
       raise NoBundleIDError unless bundle_id
@@ -200,17 +225,19 @@ __APPLESCRIPT__}.chop
 
 
 
-
+    def CoreServicesIcon(name)
+      {
+        :type => "default" ,
+        :name => "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/#{name}.icns"
+      }
+    end
 
     def rescue_feedback(opts = {})
       default_opts = {
         :title    => "Failed Query!",
         :subtitle => "Check the log file below for extra debug info.",
         :uid      => 'Rescue Feedback',
-        :icon     => {
-          :type => "default" ,
-          :name => "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertStopIcon.icns"
-        }
+        :icon     => CoreServicesIcon('AlertStopIcon')
       }
       opts = default_opts.update(opts)
 
@@ -240,7 +267,7 @@ __APPLESCRIPT__}.chop
 
     def init_query_parser
       options.mode = :feedback
-
+      modifiers = [:comand, :alt, :control, :shift, :fn]
       OptionParser.new do |opts|
         opts.separator ""
         opts.separator "Built-in Options:"
@@ -248,6 +275,11 @@ __APPLESCRIPT__}.chop
         opts.on("--mode [TYPE]", [:feedback, :action],
                 "Alfred handler working mode (feedback, action)") do |t|
           options.mode = t
+        end
+
+        opts.on("--modifier [MODIFIER]", modifiers,
+                "Alfred action modifier (#{modifiers})") do |t|
+          options.modifier = t
         end
 
         opts.separator ""
