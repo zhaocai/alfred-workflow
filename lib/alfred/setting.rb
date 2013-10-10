@@ -1,102 +1,52 @@
 require 'yaml'
-require 'plist'
 
 module Alfred
 
-  class Setting
-    attr_accessor :settings
+  class Setting < ::Hash
+    attr_accessor :backend_file, :format
 
-    def initialize(alfred, &blk)
+    def initialize(alfred, &block)
+      super()
       @core = alfred
-      instance_eval(&blk) if block_given?
+
+      instance_eval(&block) if block_given?
+
+      @format ||= "yaml"
+      @backend_file ||= File.join(@core.storage_path, "setting.#{@format}")
+
       raise InvalidFormat, "#{format} is not suported." unless validate_format
-      @backend = get_format_class(format).new(@core, setting_file)
-    end
 
-    def use_setting_file(opts = {})
-      @setting_file = opts[:file] if opts[:file]
-      @format = opts[:format] ? opts[:format] : "yaml"
+      unless File.exist?(@backend_file)
+        self.merge!({:id => @core.bundle_id})
+        dump(:flush => true)
+      else
+        load
+      end
     end
-
 
     def validate_format
-      ['yaml', 'plist'].include?(format)
-    end
-
-    def format
-      @format ||= "yaml"
-    end
-
-    def setting_file
-      @setting_file ||= File.join(@core.storage_path, "setting.#{@format}")
-    end
-
-    def get_format_class(format_class)
-      Alfred::Setting.const_get("#{format.to_s.capitalize}End")
+      ['yaml'].include?(format)
     end
 
     def load
-      @backend.send(:load)
+      send("load_from_#{format}".to_sym)
     end
 
-    def dump(object, opts = {})
-      @backend.send(:dump, object, opts)
+    def dump(opts = {})
+      send("dump_to_#{format}".to_sym, opts)
     end
 
+    protected
 
-
-    class BackEnd
-      def initialize(alfred, file)
-        @core = alfred
-        @backend_file = file
-
-        unless File.exist?(@backend_file)
-          settings = {:id => @core.bundle_id}
-          dump(settings, :flush => true)
-        end
-      end
-
-      def load
-        raise NotImplementedError
-      end
-
-      def dump(object, opts = {})
-        raise NotImplementedError
-      end
+    def load_from_yaml
+        self.merge!(YAML::load_file(@backend_file))
     end
 
-    class YamlEnd < BackEnd
-      def initialize(alfred, file)
-        super
-      end
-
-      def load
-        YAML::load_file(@backend_file)
-      end
-
-      def dump(object, opts = {})
-        File.open(@backend_file, File::WRONLY|File::TRUNC|File::CREAT) { |f|
-          YAML::dump(object, f)
-          f.flush if opts[:flush]
-        }
-      end
-    end
-
-    class PlistEnd < BackEnd
-      def initialize(alfred, file)
-        super
-      end
-
-      def load
-        Plist::parse_xml( File.read(@backend_file) )
-      end
-
-      def dump(object, opts = {})
-        File.open(@backend_file, File::WRONLY|File::TRUNC|File::CREAT) { |f|
-          f.puts object.to_plist
-          f.flush if opts[:flush]
-        }
-      end
+    def dump_to_yaml(opts = {})
+      File.open(@backend_file, File::WRONLY|File::TRUNC|File::CREAT) { |f|
+        YAML::dump(self, f)
+        f.flush if opts[:flush]
+      }
     end
 
   end

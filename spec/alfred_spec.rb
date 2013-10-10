@@ -11,16 +11,8 @@ describe "Alfred" do
     @alfred.bundle_id.should == "me.zhaowu.alfred-workflow-gem"
   end
 
-  context "Help" do
-    before :all do
-      @alfred.with_help_feedback = true
-    end
-
-    it "should have correct default setting file" do
-      @alfred.workflow_setting.setting_file.should eq 'setting.yaml'
-    end
-
-
+  it "should have correct default setting file" do
+    @alfred.workflow_setting.backend_file.should eq File.join(Alfred.workflow_folder, "setting.yaml")
   end
 
   after :all do

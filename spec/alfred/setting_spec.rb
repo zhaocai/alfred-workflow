@@ -7,28 +7,25 @@ describe "Setting with yaml as backend" do
   end
 
   it "should use yaml as defualt backend" do
-    @setting = @alfred.setting
-    @setting.format.should == "yaml"
+    @alfred.setting.format.should == "yaml"
   end
 
   it "should correctly load settings" do
-    settings = @alfred.setting.load
-    settings[:id].should == "me.zhaowu.alfred-workflow-gem"
+    @alfred.setting[:id].should == "me.zhaowu.alfred-workflow-gem"
   end
 
   it "should correctly save settings" do
-    settings = @alfred.setting.load
-    settings[:language] = "Chinese"
-    @alfred.setting.dump(settings, :flush => true)
+    @alfred.setting[:language] = "Chinese"
+    @alfred.setting.dump(:flush => true)
 
-    settings = @alfred.setting.load
-    settings[:language].should == "Chinese"
+    @alfred.setting.load
+    @alfred.setting[:language].should == "Chinese"
   end
 
 
   after :all do
     reset_workflow
-    File.unlink(@alfred.setting.setting_file)
+    File.unlink(@alfred.setting.backend_file)
   end
 
 end
@@ -36,37 +33,34 @@ end
 
 
 
-describe "Setting with plist as backend" do
-  before :all do
-    setup_workflow
-    @alfred =  Alfred::Core.new
+# describe "Setting with plist as backend" do
+  # before :all do
+    # setup_workflow
+    # @alfred =  Alfred::Core.new
 
-    @alfred.setting do
-      use_setting_file :format => 'plist'
-    end
-  end
+    # @alfred.setting do
+      # @format = 'plist'
+    # end
+  # end
 
-  it "should correctly load settings" do
-    settings = @alfred.setting.load
-    settings['id'].should == "me.zhaowu.alfred-workflow-gem"
-  end
+  # it "should correctly load settings" do
+    # @alfred.setting['id'].should == "me.zhaowu.alfred-workflow-gem"
+  # end
 
-  it "should correctly save settings" do
-    settings = @alfred.setting.load
-    settings['language'] = "English"
-    @alfred.setting.dump(settings, :flush => true)
+  # it "should correctly save settings" do
+    # @alfred.setting['language'] = "English"
+    # @alfred.setting.dump(:flush => true)
 
-    settings = @alfred.setting.load
-    settings['language'].should == "English"
-  end
+    # @alfred.setting['language'].should == "English"
+  # end
 
 
-  after :all do
-    reset_workflow
-    File.unlink(@alfred.setting.setting_file)
-  end
+  # after :all do
+    # reset_workflow
+    # File.unlink(@alfred.setting.backend_file)
+  # end
 
-end
+# end
 
 
 
