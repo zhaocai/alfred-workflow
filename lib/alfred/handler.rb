@@ -20,6 +20,10 @@ module Alfred
         ;
       end
 
+      def on_help
+        []
+      end
+
       def on_feedback
         raise NotImplementedError
       end
@@ -83,11 +87,17 @@ module Alfred
 
         @handlers.each do |h|
           yield(h)
-          break if @status[:break].include?(h.status)
         end
       end
 
-      alias_method :each_handler, :each
+      def each_handler
+        return enum_for(__method__) unless block_given?
+
+        @handlers.each do |h|
+          yield(h)
+          break if @status[:break].include?(h.status)
+        end
+      end
 
     end
   end

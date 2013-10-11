@@ -8,10 +8,13 @@ module Alfred
         super
         @order = 9
         @settings = {
-          :setting    => alfred.workflow_setting ,
-          :key        => :help                   ,
-          :exclusive? => true                    ,
+          :exclusive? => true   ,
+          :handler    => 'Help'
         }.update(opts)
+
+        unless @settings[:items]
+          @settings[:items] = alfred.workflow_setting[:help]
+        end
 
       end
 
@@ -21,6 +24,14 @@ module Alfred
         end
       end
 
+      def on_help
+        {
+          :kind     => 'text'                        ,
+          :title    => '-h, --help [query]'          ,
+          :subtitle => 'Print workflow help message' ,
+        }
+      end
+
       def feedback?
         options.help
       end
@@ -28,32 +39,61 @@ module Alfred
       def on_feedback
         return unless feedback?
 
-        feedback_items = @settings[:setting][@settings[:key]]
-        return if feedback_items.nil?
-
-        feedback_items.each do |item|
-
-          base_arg = {
-            :handler => 'Help'       ,
-            :kind    => item[:kind]  ,
-          }
+        @settings[:items].each do |item|
 
           case item[:kind]
           when 'file'
             item[:path] = File.expand_path(item[:path])
+            item[:arg] = xml_builder(
+              :handler => @settings[:handler] ,
+              :kind    => item[:kind]         ,
+              :path    => item[:path]
+            )
+
             feedback.add_file_item(item[:path], item)
+
           when 'url'
             item[:arg] = xml_builder(
-              base_arg.merge(:url => item[:url])
+              :handler => @settings[:handler] ,
+              :kind    => item[:kind]         ,
+              :url     => item[:url]
             )
-            item[:icon] = @core.CoreServicesIcon('BookmarkIcon') unless item[:icon]
-            feedback.add_item(item)
+
+            feedback.add_item(
+              {
+                :icon => feedback.CoreServicesIcon('BookmarkIcon')
+              }.merge(item)
+            )
+
+          when 'text', 'message'
+            item[:arg] = xml_builder(
+              {
+                :handler      => @settings[:handler] ,
+                :kind         => item[:kind]         ,
+              }
+            )
+
+            feedback.add_item(
+              {
+                :valid        => 'no' ,
+                :autocomplete => ''   ,
+                :icon         => feedback.CoreServicesIcon('ClippingText') ,
+              }.merge(item)
+            )
+
           else
             item[:arg] = xml_builder(
-              base_arg.merge(:title => item[:title])
+              {
+              :handler => @settings[:handler] ,
+              :kind    => item[:kind]         ,
+              }.merge(item)
             )
-            item[:icon] = @core.CoreServicesIcon('HelpIcon') unless item[:icon]
-            feedback.add_item(item)
+
+            feedback.add_item(
+              {
+                :icon => feedback.CoreServicesIcon('HelpIcon'),
+              }.merge(item)
+            )
           end
         end
 
@@ -61,7 +101,7 @@ module Alfred
       end
 
       def action?(arg)
-        arg.is_a?(Hash) && arg[:handler].eql?('Help')
+        arg.is_a?(Hash) && arg[:handler].eql?(@settings[:handler])
       end
 
       def on_action(arg)
@@ -70,6 +110,8 @@ module Alfred
         case arg[:kind]
         when 'url'
           ::Alfred::Util.open_url(arg[:url])
+        when 'file'
+          %x{open "#{arg[:path]}"}
         end
       end
     end

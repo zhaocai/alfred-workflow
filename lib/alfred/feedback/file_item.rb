@@ -24,10 +24,6 @@ module Alfred
         super @title, opts
       end
 
-      def match?(query)
-        all_title_match?(query)
-      end
-
     end
   end
 end

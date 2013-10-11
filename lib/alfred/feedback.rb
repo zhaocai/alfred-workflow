@@ -1,14 +1,18 @@
 require "rexml/document"
 require 'alfred/feedback/item'
 require 'alfred/feedback/file_item'
+require 'alfred/feedback/webloc_item'
 
 module Alfred
 
   class Feedback
     attr_accessor :items
 
-    def initialize
+    def initialize(alfred, &blk)
       @items = []
+      @core = alfred
+
+      instance_eval(&blk) if block_given?
     end
 
     def add_item(opts = {})
@@ -18,6 +22,13 @@ module Alfred
 
     def add_file_item(path, opts = {})
       @items << FileItem.new(path, opts)
+    end
+
+    def add_webloc_item(path, opts = {})
+      unless opts[:folder]
+        opts[:folder] = @core.storage_path
+      end
+      @items << WeblocItem.new(path, opts)
     end
 
     def to_xml(with_query = '', items = @items)
@@ -36,6 +47,19 @@ module Alfred
 
     alias_method :to_alfred, :to_xml
 
+    def CoreServicesIcon(name)
+      {
+        :type => "default" ,
+        :name => "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/#{name}.icns"
+      }
+    end
+
+    def FileIcon(path)
+      {
+        :type => "fileicon" ,
+        :name => path       ,
+      }
+    end
 
 
     # serialize
@@ -55,10 +79,7 @@ module Alfred
 
   class CachedFeedback < Feedback
     def initialize(alfred, &blk)
-      super()
-      @core = alfred
-
-      instance_eval(&blk) if block_given?
+      super
     end
 
     def use_cache_file(opts = {})

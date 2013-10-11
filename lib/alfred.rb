@@ -11,6 +11,7 @@ require 'nori'
 require 'alfred/ui'
 require 'alfred/feedback'
 require 'alfred/setting'
+require 'alfred/handler/handler_help'
 
 module Alfred
 
@@ -105,7 +106,7 @@ __APPLESCRIPT__}.chop
 
 
     def initialize(with_help_feedback = false,
-                   with_rescue_feedback = false,
+                   with_rescue_feedback = true,
                    &blk)
       @workflow_dir = Dir.pwd
       @with_rescue_feedback = with_rescue_feedback
@@ -119,7 +120,7 @@ __APPLESCRIPT__}.chop
 
     def start
       # step 1: register option parser for handlers
-      @handler_controller.each do |handler|
+      @handler_controller.each_handler do |handler|
         handler.on_parser
       end
       query_parser.parse!
@@ -128,7 +129,10 @@ __APPLESCRIPT__}.chop
       # step 2: dispatch options to handler for feedback or action
       case options.mode
       when :feedback
-        @handler_controller.each do |handler|
+        if @with_help_feedback
+          ::Alfred::Handler::HandlerHelp.new(self).register
+        end
+        @handler_controller.each_handler do |handler|
           handler.on_feedback
         end
 
@@ -141,7 +145,7 @@ __APPLESCRIPT__}.chop
           end
         end
 
-        @handler_controller.each do |handler|
+        @handler_controller.each_handler do |handler|
           handler.on_action(arg)
         end
       else
@@ -190,9 +194,9 @@ __APPLESCRIPT__}.chop
       @feedback = CachedFeedback.new(self, &blk)
     end
 
-    def feedback
+    def feedback(&blk)
       raise NoBundleIDError unless bundle_id
-      @feedback ||= Feedback.new
+      @feedback ||= Feedback.new(self, &blk)
     end
 
     def info_plist
@@ -225,12 +229,6 @@ __APPLESCRIPT__}.chop
 
 
 
-    def CoreServicesIcon(name)
-      {
-        :type => "default" ,
-        :name => "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/#{name}.icns"
-      }
-    end
 
     def rescue_feedback(opts = {})
       default_opts = {

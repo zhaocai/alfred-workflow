@@ -8,7 +8,7 @@ module Alfred
       def initialize(title, opts = {})
         unless File.exist? opts[:webloc]
           opts[:webloc] = ::Alfred::Util.make_webloc(
-            opts[:title], opts[:url], File.dirname(opts[:webloc]))
+            opts[:title], opts[:url], opts[:folder])
         end
 
         @subtitle = opts[:url]
