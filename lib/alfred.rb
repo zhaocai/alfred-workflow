@@ -126,6 +126,7 @@ __APPLESCRIPT__}.chop
     def initialize(&blk)
       @with_rescue_feedback = true
       @with_help_feedback = false
+      @use_default_cached_feedback_reload_option = false
 
       @handler_controller = ::Alfred::Handler::Controller.new
 
@@ -150,10 +151,20 @@ __APPLESCRIPT__}.chop
         handler.on_parser
       end
       query_parser.parse!
-      @query = ARGV
 
+      if @use_default_cached_feedback_reload_option && !options.should_reload_cached_feedback
+        if ARGV[0].eql?('!')
+          ARGV.shift
+          options.should_reload_cached_feedback = true
+        elsif ARGV[-1].eql?('!')
+          ARGV.delete_at(-1)
+          options.should_reload_cached_feedback = true
+        end
+      end
+
+      @query = ARGV
       # step 2: dispatch options to handler for feedback or action
-      case options.mode
+      case options.workflow_mode
       when :feedback
         @handler_controller.each_handler do |handler|
           handler.on_feedback
@@ -181,13 +192,13 @@ __APPLESCRIPT__}.chop
           end
         end
       else
-        raise InvalidArgument, "#{options.mode} mode is not supported."
+        raise InvalidArgument, "#{options.workflow_mode} mode is not supported."
       end
 
     end
 
-    def options
-      @options ||= OpenStruct.new
+    def options(opts = {})
+      @options ||= OpenStruct.new(opts)
     end
 
     def query_parser
@@ -223,7 +234,7 @@ __APPLESCRIPT__}.chop
     end
 
     def with_cached_feedback(&blk)
-      @feedback = CachedFeedback.new(self, &blk)
+      @feedback = Feedback.new(self, &blk)
     end
 
     def feedback(&blk)
@@ -303,16 +314,18 @@ __APPLESCRIPT__}.chop
 
 
     def init_query_parser
-      options.mode = :feedback
+      options.workflow_mode = :feedback
       options.modifier = :none
+      options.should_reload_cached_feedback = false
+
       modifiers = [:command, :alt, :control, :shift, :fn, :none]
       OptionParser.new do |opts|
         opts.separator ""
         opts.separator "Built-in Options:"
 
-        opts.on("--mode [TYPE]", [:feedback, :action],
+        opts.on("--workflow-mode [TYPE]", [:feedback, :action],
                 "Alfred handler working mode (feedback, action)") do |t|
-          options.mode = t
+          options.workflow_mode = t
         end
 
         opts.on("--modifier [MODIFIER]", modifiers,
@@ -320,6 +333,11 @@ __APPLESCRIPT__}.chop
           options.modifier = t
         end
 
+        if @use_default_cached_feedback_reload_option
+          opts.on("-r", "--reload RELOAD", "Reload cached feedback") do
+            options.should_reload_cached_feedback = true
+          end
+        end
         opts.separator ""
         opts.separator "Handler Options:"
       end

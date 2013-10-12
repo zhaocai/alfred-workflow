@@ -48,7 +48,9 @@ module Alfred
     alias_method :to_alfred, :to_xml
 
 
-    # helper method for icon
+    #
+    # ## helper class method for icon
+    #
     def self.CoreServicesIcon(name)
       {
         :type => "default" ,
@@ -70,7 +72,35 @@ module Alfred
     end
 
 
-    # serialize
+    #
+    # ## serialization
+    #
+    def use_cache_file(opts = {})
+      @backend_file = opts[:file] if opts[:file]
+      @should_expire_after_second = opts[:expire].to_i if opts[:expire]
+    end
+
+    def cache_file
+      @backend_file ||= File.join(@core.volatile_storage_path, "cached_feedback")
+    end
+
+    def expired?
+      return false unless @should_expire_after_second
+      Time.now - File.ctime(cache_file) > @should_expire_after_second
+    end
+
+    def get_cached_feedback
+      return nil unless File.exist?(cache_file)
+      return nil if expired?
+
+      load(@backend_file)
+      self
+    end
+
+    def put_cached_feedback
+      dump(cache_file)
+    end
+
     def dump(to_file)
       File.open(to_file, "wb") { |f| Marshal.dump(@items, f) }
     end
@@ -82,34 +112,7 @@ module Alfred
     def append(from_file)
       @items << File.open(from_file, "rb") { |f| Marshal.load(f) }
     end
-  end
 
-
-  class CachedFeedback < Feedback
-    def initialize(alfred, &blk)
-      super
-    end
-
-    def use_cache_file(opts = {})
-      @cf_file = opts[:file] if opts[:file]
-      @cf_file_valid_time = opts[:expire] if opts[:expire]
-    end
-
-    def cache_file
-      @cf_file ||= File.join(@core.volatile_storage_path, "cached_feedback")
-    end
-    def get_cached_feedback
-      return nil unless File.exist?(cache_file)
-      if @cf_file_valid_time
-        return nil if Time.now - File.ctime(cache_file) > @cf_file_valid_time
-      end
-      load(@cf_file)
-      return self
-    end
-
-    def put_cached_feedback
-      dump(cache_file)
-    end
   end
 
 end
