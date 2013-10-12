@@ -97,6 +97,10 @@ module Alfred
         @handlers.add(handler)
       end
 
+      def empty?
+        @handlers.empty?
+      end
+
       def each
         return enum_for(__method__) unless block_given?
 

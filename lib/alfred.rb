@@ -30,11 +30,25 @@ module Alfred
 
   class << self
 
+    #
+    # Default entry point to build alfred workflow with this gem
+    #
+    # Example:
+    #
+    #    class MyHandler < ::Alfred::Handler::Base
+    #      # ......
+    #    end
+    #    Alfred.with_friendly_error do |alfred|
+    #      alfred.with_rescue_feedback = true
+    #      alfred.with_help_feedback = true
+    #      MyHandler.new(alfred).register
+    #    end
+    #
     def with_friendly_error(alfred = Alfred::Core.new, &blk)
       begin
 
         yield alfred
-        alfred.start
+        alfred.start_handler
 
       rescue AlfredError => e
         alfred.ui.error e.message
@@ -119,11 +133,17 @@ __APPLESCRIPT__}.chop
     end
 
 
-    def start
+
+    #
+    # Main loop to work with handlers
+    #
+    def start_handler
 
       if @with_help_feedback
         ::Alfred::Handler::Help.new(self, :with_handler_help => true).register
       end
+
+      return if @handler_controller.empty?
 
       # step 1: register option parser for handlers
       @handler_controller.each do |handler|
