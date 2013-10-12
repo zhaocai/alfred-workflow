@@ -47,6 +47,8 @@ module Alfred
           "Fail to parse user query.\n" \
           "  #{e.inspect}\n  #{e.backtrace.join("  \n")}\n")
 
+        puts alfred.rescue_feedback(
+          :title => "#{e.class}: #{e.message}") if alfred.with_rescue_feedback
         exit e.status
       rescue Interrupt => e
         alfred.ui.error "\nQuitting..."
@@ -242,16 +244,23 @@ __APPLESCRIPT__}.chop
 
     def rescue_feedback(opts = {})
       default_opts = {
-        :title    => "Failed Query!",
-        :subtitle => "Check the log file below for extra debug info.",
-        :uid      => 'Rescue Feedback',
-        :icon     => Feedback.CoreServicesIcon('AlertStopIcon')
+        :title        => "Failed Query!"                                  ,
+        :subtitle     => "Check log #{ui.log_file} for extra debug info." ,
+        :uid          => 'Rescue Feedback'                                ,
+        :valid        => 'no'                                             ,
+        :autocomplete => ''                                               ,
+        :icon         => Feedback.CoreServicesIcon('AlertStopIcon')
       }
+      if @with_help_feedback
+       default_opts[:autocomplete] = '-h'
+      end
       opts = default_opts.update(opts)
 
       items = []
       items << Feedback::Item.new(opts[:title], opts)
-      items << Feedback::FileItem.new(ui.log_file)
+      log_item = Feedback::FileItem.new(ui.log_file)
+      log_item.uid = nil
+      items << log_item
 
       feedback.to_alfred('', items)
     end
