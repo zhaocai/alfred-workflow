@@ -8,27 +8,30 @@ module Alfred
         super
         @order = 9
         @settings = {
-          :exclusive? => true   ,
-          :handler    => 'Help'
+          :handler                    => 'Help' ,
+          :exclusive?                 => true   ,
+          :with_handler_help          => false  ,
+          :items                      => []     ,
         }.update(opts)
-
-        unless @settings[:items]
-          @settings[:items] = alfred.workflow_setting[:help]
+        if @settings[:items].empty?
+          @load_from_workflow_setting = true
+        else
+          @load_from_workflow_setting = false
         end
 
       end
 
       def on_parser
-        parser.on('-h', '--help', 'Workflow Helper') do
+        parser.on_tail('-?', '-h', '--help', 'Workflow Helper') do
           options.help = true
         end
       end
 
       def on_help
         {
-          :kind     => 'text'                        ,
-          :title    => '-h, --help [query]'          ,
-          :subtitle => 'Print workflow help message' ,
+          :kind     => 'text'                     ,
+          :title    => '-?, -h, --help [query]'   ,
+          :subtitle => 'Show Workflow Usage Help' ,
         }
       end
 
@@ -39,19 +42,28 @@ module Alfred
       def on_feedback
         return unless feedback?
 
+
+        if @settings[:with_handler_help]
+          @core.handler_controller.each do |h|
+            @settings[:items].push h.on_help
+          end
+        end
+
+        if @load_from_workflow_setting
+          if @core.workflow_setting.has_key?(:help)
+            @settings[:items].push @core.workflow_setting[:help]
+          end
+        end
+
+        @settings[:items].flatten!
+
         @settings[:items].each do |item|
 
           case item[:kind]
           when 'file'
             item[:path] = File.expand_path(item[:path])
-            item[:arg] = xml_builder(
-              :handler => @settings[:handler] ,
-              :kind    => item[:kind]         ,
-              :path    => item[:path]
-            )
-
+            # action is handled by fallback action in the main loop
             feedback.add_file_item(item[:path], item)
-
           when 'url'
             item[:arg] = xml_builder(
               :handler => @settings[:handler] ,
@@ -61,7 +73,7 @@ module Alfred
 
             feedback.add_item(
               {
-                :icon => feedback.CoreServicesIcon('BookmarkIcon')
+                :icon => ::Alfred::Feedback.CoreServicesIcon('BookmarkIcon')
               }.merge(item)
             )
 
@@ -77,7 +89,7 @@ module Alfred
               {
                 :valid        => 'no' ,
                 :autocomplete => ''   ,
-                :icon         => feedback.CoreServicesIcon('ClippingText') ,
+                :icon         => ::Alfred::Feedback.CoreServicesIcon('ClippingText') ,
               }.merge(item)
             )
 
@@ -91,7 +103,7 @@ module Alfred
 
             feedback.add_item(
               {
-                :icon => feedback.CoreServicesIcon('HelpIcon'),
+                :icon => ::Alfred::Feedback.CoreServicesIcon('HelpIcon'),
               }.merge(item)
             )
           end
@@ -100,9 +112,6 @@ module Alfred
         @status = :exclusive if @settings[:exclusive?]
       end
 
-      def action?(arg)
-        arg.is_a?(Hash) && arg[:handler].eql?(@settings[:handler])
-      end
 
       def on_action(arg)
         return unless action?(arg)

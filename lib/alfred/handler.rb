@@ -24,11 +24,18 @@ module Alfred
         []
       end
 
+      def feedback?
+        true
+      end
       def on_feedback
         raise NotImplementedError
       end
 
-      def on_action
+      def action?(arg)
+        arg.is_a?(Hash) && arg[:handler].eql?(@settings[:handler])
+      end
+
+      def on_action(arg)
         ;
       end
 
@@ -40,6 +47,14 @@ module Alfred
         order <=> other.order
       end
 
+
+      def status_message(text, exitstatus)
+        if exitstatus == 0
+          return "⭕ #{text}"
+        else
+          return "❌ #{text}"
+        end
+      end
 
 
       # from alfred core

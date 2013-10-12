@@ -47,14 +47,22 @@ module Alfred
 
     alias_method :to_alfred, :to_xml
 
-    def CoreServicesIcon(name)
+
+    # helper method for icon
+    def self.CoreServicesIcon(name)
       {
         :type => "default" ,
         :name => "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/#{name}.icns"
       }
     end
 
-    def FileIcon(path)
+    def self.Icon(name)
+      {
+        :type => "default" ,
+        :name => name       ,
+      }
+    end
+    def self.FileIcon(path)
       {
         :type => "fileicon" ,
         :name => path       ,

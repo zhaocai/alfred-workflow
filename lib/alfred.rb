@@ -11,7 +11,7 @@ require 'nori'
 require 'alfred/ui'
 require 'alfred/feedback'
 require 'alfred/setting'
-require 'alfred/handler/handler_help'
+require 'alfred/handler/help'
 
 module Alfred
 
@@ -43,9 +43,9 @@ module Alfred
           :title => "#{e.class}: #{e.message}") if alfred.with_rescue_feedback
         exit e.status_code
       rescue OptionParser::InvalidOption, OptionParser::MissingArgument => e
-        alfred.ui.error e.message
-        alfred.ui.debug $!.to_s
-        alfred.ui.debug alfred.query_parser
+        alfred.ui.error(
+          "Fail to parse user query.\n" \
+          "  #{e.inspect}\n  #{e.backtrace.join("  \n")}\n")
 
         exit e.status
       rescue Interrupt => e
@@ -57,6 +57,8 @@ module Alfred
       rescue SystemExit => e
         puts alfred.rescue_feedback(
           :title => "SystemExit: #{e.status}") if alfred.with_rescue_feedback
+        alfred.ui.error e.message
+        alfred.ui.debug e.backtrace.join("\n")
         exit e.status
       rescue Exception => e
         alfred.ui.error(
@@ -105,12 +107,9 @@ __APPLESCRIPT__}.chop
     attr_reader :query
 
 
-    def initialize(with_help_feedback = false,
-                   with_rescue_feedback = true,
-                   &blk)
-      @workflow_dir = Dir.pwd
-      @with_rescue_feedback = with_rescue_feedback
-      @with_help_feedback = with_rescue_feedback
+    def initialize(&blk)
+      @with_rescue_feedback = true
+      @with_help_feedback = false
 
       @handler_controller = ::Alfred::Handler::Controller.new
 
@@ -119,8 +118,13 @@ __APPLESCRIPT__}.chop
 
 
     def start
+
+      if @with_help_feedback
+        ::Alfred::Handler::Help.new(self, :with_handler_help => true).register
+      end
+
       # step 1: register option parser for handlers
-      @handler_controller.each_handler do |handler|
+      @handler_controller.each do |handler|
         handler.on_parser
       end
       query_parser.parse!
@@ -129,9 +133,6 @@ __APPLESCRIPT__}.chop
       # step 2: dispatch options to handler for feedback or action
       case options.mode
       when :feedback
-        if @with_help_feedback
-          ::Alfred::Handler::HandlerHelp.new(self).register
-        end
         @handler_controller.each_handler do |handler|
           handler.on_feedback
         end
@@ -145,8 +146,17 @@ __APPLESCRIPT__}.chop
           end
         end
 
-        @handler_controller.each_handler do |handler|
-          handler.on_action(arg)
+        if arg.is_a?(Hash)
+          @handler_controller.each_handler do |handler|
+            handler.on_action(arg)
+          end
+        else
+          #fallback default action
+          arg.each do |a|
+            if File.exist? a
+              %x{open "#{a}"}
+            end
+          end
         end
       else
         raise InvalidArgument, "#{options.mode} mode is not supported."
@@ -235,7 +245,7 @@ __APPLESCRIPT__}.chop
         :title    => "Failed Query!",
         :subtitle => "Check the log file below for extra debug info.",
         :uid      => 'Rescue Feedback',
-        :icon     => CoreServicesIcon('AlertStopIcon')
+        :icon     => Feedback.CoreServicesIcon('AlertStopIcon')
       }
       opts = default_opts.update(opts)
 
@@ -265,7 +275,8 @@ __APPLESCRIPT__}.chop
 
     def init_query_parser
       options.mode = :feedback
-      modifiers = [:comand, :alt, :control, :shift, :fn]
+      options.modifier = :none
+      modifiers = [:command, :alt, :control, :shift, :fn, :none]
       OptionParser.new do |opts|
         opts.separator ""
         opts.separator "Built-in Options:"
