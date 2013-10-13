@@ -7,11 +7,12 @@ module Alfred
 
   class Feedback
     attr_accessor :items
+    attr_reader :backend_file
 
-    def initialize(alfred, &blk)
+    def initialize(alfred, opts = {}, &blk)
       @items = []
       @core = alfred
-
+      use_cache_file(opts)
       instance_eval(&blk) if block_given?
     end
 
@@ -47,6 +48,11 @@ module Alfred
 
     alias_method :to_alfred, :to_xml
 
+    #
+    # Merge with other feedback
+    def merge!(other)
+      @items |= other.items
+    end
 
     #
     # ## helper class method for icon

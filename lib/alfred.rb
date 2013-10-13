@@ -116,8 +116,8 @@ __APPLESCRIPT__}.chop
   end
 
   class Core
-    attr_accessor :with_rescue_feedback
-    attr_accessor :with_help_feedback
+    attr_accessor :with_rescue_feedback, :with_help_feedback
+    attr_accessor :cached_feedback_reload_option
 
     attr_reader :handler_controller
     attr_reader :query
@@ -126,7 +126,10 @@ __APPLESCRIPT__}.chop
     def initialize(&blk)
       @with_rescue_feedback = true
       @with_help_feedback = false
-      @use_default_cached_feedback_reload_option = false
+      @cached_feedback_reload_option = {
+        :use_reload_option => false,
+        :use_exclamation_mark => false
+      }
 
       @handler_controller = ::Alfred::Handler::Controller.new
 
@@ -152,7 +155,7 @@ __APPLESCRIPT__}.chop
       end
       query_parser.parse!
 
-      if @use_default_cached_feedback_reload_option && !options.should_reload_cached_feedback
+      if @cached_feedback_reload_option[:use_exclamation_mark] && !options.should_reload_cached_feedback
         if ARGV[0].eql?('!')
           ARGV.shift
           options.should_reload_cached_feedback = true
@@ -233,14 +236,12 @@ __APPLESCRIPT__}.chop
       @workflow_setting ||= init_workflow_setting(opts)
     end
 
-    def with_cached_feedback(&blk)
-      @feedback = Feedback.new(self, &blk)
-    end
-
     def feedback(&blk)
       raise NoBundleIDError unless bundle_id
       @feedback ||= Feedback.new(self, &blk)
     end
+
+    alias_method :with_cached_feedback, :feedback
 
     def info_plist
       @info_plist ||= Plist::parse_xml('info.plist')
@@ -296,6 +297,10 @@ __APPLESCRIPT__}.chop
       feedback.to_alfred('', items)
     end
 
+    def on_help
+      reload_help_item
+    end
+
 
     private
 
@@ -312,6 +317,27 @@ __APPLESCRIPT__}.chop
       end
     end
 
+    def reload_help_item
+      title = []
+      if  @cached_feedback_reload_option[:use_exclamation_mark]
+        title.push "!"
+      end
+
+      if @cached_feedback_reload_option[:use_reload_option]
+        title.push "-r, --reload"
+      end
+
+      unless title.empty?
+        return {
+          :kind  => 'text',
+          :order => 100,
+          :title => "#{title.join(', ')} [Reload cached feedback unconditionally]" ,
+          :subtitle => %q{The '!' mark must be at the beginning or end of the query.} ,
+        }
+      else
+        return nil
+      end
+    end
 
     def init_query_parser
       options.workflow_mode = :feedback
@@ -333,8 +359,8 @@ __APPLESCRIPT__}.chop
           options.modifier = t
         end
 
-        if @use_default_cached_feedback_reload_option
-          opts.on("-r", "--reload RELOAD", "Reload cached feedback") do
+        if @cached_feedback_reload_option[:use_reload_option]
+          opts.on("-r", "--reload", "Reload cached feedback") do
             options.should_reload_cached_feedback = true
           end
         end

@@ -3,15 +3,38 @@ require 'alfred/handler'
 module Alfred
   module Handler
 
+    class HelpItem < ::Hash
+      Default_Order = 10
+      def initialize(attributes = {}, &block)
+        super(&block)
+        initialize_attributes(attributes)
+      end
+
+      def <=>(other)
+        self[:order] <=> other[:order]
+      end
+
+      private
+
+      def initialize_attributes(attributes)
+        attributes.each_pair do |att, value|
+          self[att] = value
+        end if attributes
+        self[:order] = Default_Order unless self[:order]
+      end
+    end
+
+
     class Help < Base
       def initialize(alfred, opts = {})
         super
         @order = 9
         @settings = {
-          :handler                    => 'Help' ,
-          :exclusive?                 => true   ,
-          :with_handler_help          => false  ,
-          :items                      => []     ,
+          :handler           => 'Help' ,
+          :exclusive?        => true   ,
+          :with_handler_help => false  ,
+          :items             => []     ,
+          :default_order     => 10     ,
         }.update(opts)
         if @settings[:items].empty?
           @load_from_workflow_setting = true
@@ -29,9 +52,10 @@ module Alfred
 
       def on_help
         {
-          :kind     => 'text'                     ,
-          :title    => '-?, -h, --help [query]'   ,
-          :subtitle => 'Show Workflow Usage Help' ,
+          :kind     => 'text'                                      ,
+          :order    => 100                                         ,
+          :title    => '-?, -h, --help [Show Workflow Usage Help]' ,
+          :subtitle => 'Other feedbacks are blocked.'              ,
         }
       end
 
@@ -44,6 +68,7 @@ module Alfred
 
 
         if @settings[:with_handler_help]
+          @settings[:items].push @core.on_help
           @core.handler_controller.each do |h|
             @settings[:items].push h.on_help
           end
@@ -55,7 +80,7 @@ module Alfred
           end
         end
 
-        @settings[:items].flatten!
+        @settings[:items].flatten!.map! { |i| HelpItem.new(i) }.sort!
 
         @settings[:items].each do |item|
 
