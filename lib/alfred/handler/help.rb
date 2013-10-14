@@ -52,10 +52,13 @@ module Alfred
 
       def on_help
         {
-          :kind     => 'text'                                      ,
-          :order    => 100                                         ,
-          :title    => '-?, -h, --help [Show Workflow Usage Help]' ,
-          :subtitle => 'Other feedbacks are blocked.'              ,
+          :kind         => 'text'                                      ,
+          :order        => 100                                         ,
+          :title        => '-?, -h, --help [Show Workflow Usage Help]' ,
+          :subtitle     => 'Other feedbacks are blocked.'              ,
+          :valid        => 'no'                                        ,
+          :autocomplete => '-h'                                        ,
+          :match?       => :always_match?                              ,
         }
       end
 
@@ -80,7 +83,7 @@ module Alfred
           end
         end
 
-        @settings[:items].flatten!.map! { |i| HelpItem.new(i) }.sort!
+        @settings[:items].flatten!.compact!.map! { |i| HelpItem.new(i) }.sort!
 
         @settings[:items].each do |item|
 
@@ -119,18 +122,20 @@ module Alfred
             )
 
           else
-            item[:arg] = xml_builder(
-              {
-              :handler => @settings[:handler] ,
-              :kind    => item[:kind]         ,
-              }.merge(item)
-            )
+            if item.has_key? :title
+              item[:arg] = xml_builder(
+                {
+                  :handler => @settings[:handler] ,
+                  :kind    => item[:kind]         ,
+                }.merge(item)
+              )
 
-            feedback.add_item(
-              {
-                :icon => ::Alfred::Feedback.CoreServicesIcon('HelpIcon'),
-              }.merge(item)
-            )
+              feedback.add_item(
+                {
+                  :icon => ::Alfred::Feedback.CoreServicesIcon('HelpIcon'),
+                }.merge(item)
+              )
+            end
           end
         end
 

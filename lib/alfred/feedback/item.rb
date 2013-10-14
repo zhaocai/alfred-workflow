@@ -63,6 +63,13 @@ module Alfred
         send(@matcher, query)
       end
 
+      # 
+      # Matchers
+      #
+      def always_match?(query)
+        true
+      end
+
       def title_match?(query)
         return true if query.empty?
         if smartcase_query(query).match(@title)
