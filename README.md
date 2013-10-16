@@ -36,6 +36,15 @@ alfred-workflow is a ruby Gem helper for building [Alfred](http://www.alfredapp.
 * [alfred2-keylue-workflow]( https://github.com/zhaocai/alfred2-keylue-workflow )
 * [alfred2-sourcetree-workflow]( https://github.com/zhaocai/alfred2-sourcetree-workflow )
 
+
+## UPGRADE GUIDE
+
+### From version 1.0+ to 2.0+
+
+1. cached feedback are saved and closed automatically, call to `put_cached_feedback` is not required.
+
+
+
 ## SYNOPSIS:
 
 ### The Basic
@@ -78,7 +87,6 @@ end
 ```
 
 ![](https://raw.github.com/zhaocai/alfred2-ruby-template/master/screenshots/rescue%20feedback.png)
-
 
 ### Automate saving and loading cached feedback
 ```ruby

@@ -12,7 +12,7 @@ module Alfred
     def initialize(alfred, opts = {}, &blk)
       @items = []
       @core = alfred
-      use_cache_file(opts)
+      use_backend(opts)
       instance_eval(&blk) if block_given?
     end
 
@@ -50,8 +50,18 @@ module Alfred
 
     #
     # Merge with other feedback
+    #
     def merge!(other)
       @items |= other.items
+    end
+
+    #
+    # The workflow is about to complete
+    #
+    # - save cached feedback if necessary
+    # 
+    def close
+      put_cached_feedback if @backend_file
     end
 
     #
@@ -81,22 +91,23 @@ module Alfred
     #
     # ## serialization
     #
-    def use_cache_file(opts = {})
+    def use_backend(opts = {})
       @backend_file = opts[:file] if opts[:file]
       @should_expire_after_second = opts[:expire].to_i if opts[:expire]
     end
+    alias_method :use_cache_file, :use_backend
 
-    def cache_file
+    def backend_file
       @backend_file ||= File.join(@core.volatile_storage_path, "cached_feedback")
     end
 
     def expired?
       return false unless @should_expire_after_second
-      Time.now - File.ctime(cache_file) > @should_expire_after_second
+      Time.now - File.ctime(backend_file) > @should_expire_after_second
     end
 
     def get_cached_feedback
-      return nil unless File.exist?(cache_file)
+      return nil unless File.exist?(backend_file)
       return nil if expired?
 
       load(@backend_file)
@@ -104,7 +115,7 @@ module Alfred
     end
 
     def put_cached_feedback
-      dump(cache_file)
+      dump(backend_file)
     end
 
     def dump(to_file)

@@ -33,13 +33,27 @@ module Alfred
             comment:"#{comment}"}
         end tell
         return POSIX path of (webloc as string)
-        __APPLESCRIPT__}.strip_heredoc
+__APPLESCRIPT__}
       end
 
 
       def open_url(url)
         uri = URI.parse(url)
         %x{open #{uri.to_s}}
+      end
+
+      def reveal_in_finder(path)
+        raise InvalidArgument, "#{path} does not exist." unless File.exist? path
+        %x{osascript <<__APPLESCRIPT__
+        tell application "Finder"
+            try
+                reveal POSIX file "#{path}"
+                activate
+            on error err_msg number err_num
+                return err_msg
+            end try
+        end tell
+__APPLESCRIPT__}
       end
 
     end

@@ -56,14 +56,6 @@ module Alfred
         puts alfred.rescue_feedback(
           :title => "#{e.class}: #{e.message}") if alfred.with_rescue_feedback
         exit e.status_code
-      rescue OptionParser::InvalidOption, OptionParser::MissingArgument => e
-        alfred.ui.error(
-          "Fail to parse user query.\n" \
-          "  #{e.inspect}\n  #{e.backtrace.join("  \n")}\n")
-
-        puts alfred.rescue_feedback(
-          :title => "#{e.class}: #{e.message}") if alfred.with_rescue_feedback
-        exit e.status
       rescue Interrupt => e
         alfred.ui.error "\nQuitting..."
         alfred.ui.debug e.backtrace.join("\n")
@@ -120,7 +112,7 @@ __APPLESCRIPT__}.chop
     attr_accessor :cached_feedback_reload_option
 
     attr_reader :handler_controller
-    attr_reader :query
+    attr_reader :query, :raw_query
 
 
     def initialize(&blk)
@@ -131,12 +123,17 @@ __APPLESCRIPT__}.chop
         :use_exclamation_mark => false
       }
 
+      @raw_query = ARGV.dup
+
       @handler_controller = ::Alfred::Handler::Controller.new
 
       instance_eval(&blk) if block_given?
     end
 
 
+    def debug?
+      ui.level >= LogUI::WARN
+    end
 
     #
     # Main loop to work with handlers
@@ -153,7 +150,14 @@ __APPLESCRIPT__}.chop
       @handler_controller.each do |handler|
         handler.on_parser
       end
-      query_parser.parse!
+
+      begin
+        query_parser.parse!
+      rescue OptionParser::InvalidOption, OptionParser::MissingArgument => e
+        ui.warn(
+          "Fail to parse user query.\n" \
+          "  #{e.inspect}\n  #{e.backtrace.join("  \n")}\n") if debug?
+      end
 
       if @cached_feedback_reload_option[:use_exclamation_mark] && !options.should_reload_cached_feedback
         if ARGV[0].eql?('!')
@@ -166,7 +170,8 @@ __APPLESCRIPT__}.chop
       end
 
       @query = ARGV
-      # step 2: dispatch options to handler for feedback or action
+
+      # step 2: dispatch options to handler for FEEDBACK or ACTION
       case options.workflow_mode
       when :feedback
         @handler_controller.each_handler do |handler|
@@ -198,6 +203,31 @@ __APPLESCRIPT__}.chop
         raise InvalidArgument, "#{options.workflow_mode} mode is not supported."
       end
 
+      # step 3: close
+      @feedback.close if @feedback
+      @handler_controller.each_handler do |handler|
+        handler.on_close
+      end
+
+    end
+
+    #
+    # Parse and return user query to three parts
+    #
+    #   [ [before], last option, tail ]
+    #
+    def last_option
+      (@raw_query.size - 1).downto(0) do |i|
+        if @raw_query[i].start_with? '-'
+          if @raw_query[i] == @raw_query[-1]
+            return @raw_query[0...i], '', @raw_query[i]
+          else
+            return @raw_query[0..i], @raw_query[i], @raw_query[(i + 1)..-1].join(' ')
+          end
+        end
+      end
+
+      return [], '', @raw_query.join(' ')
     end
 
     def options(opts = {})
@@ -231,6 +261,8 @@ __APPLESCRIPT__}.chop
     def setting(&blk)
       @setting ||= Setting.new(self, &blk)
     end
+
+    alias_method :user_setting, :setting
 
     def workflow_setting(opts = {})
       @workflow_setting ||= init_workflow_setting(opts)
@@ -272,6 +304,9 @@ __APPLESCRIPT__}.chop
     end
 
 
+    def cached_feedback?
+      @cached_feedback_reload_option.values.any?
+    end
 
 
     def rescue_feedback(opts = {})

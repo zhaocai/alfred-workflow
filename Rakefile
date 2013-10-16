@@ -19,6 +19,7 @@ Hoe.spec 'alfred-workflow' do
 
   extra_deps << ['plist', '>= 3.1.0']
   extra_deps << ['gyoku', '>= 1.1.0'] << ['nori', '>= 2.3.0']
+  extra_deps << ['fuzzy_match', '>= 2.0.4'] << ['amatch', '>= 0.2.11']
 
 
 

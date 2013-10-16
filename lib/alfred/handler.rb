@@ -39,6 +39,10 @@ module Alfred
         ;
       end
 
+      def on_close
+        ;
+      end
+
       def register
         @core.handler_controller.register(self)
       end
