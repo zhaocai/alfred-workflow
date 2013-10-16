@@ -1,4 +1,7 @@
 require 'alfred/handler'
+require 'fuzzy_match'
+require 'amatch'
+FuzzyMatch.engine = :amatch
 
 module Alfred
   module Handler
@@ -6,9 +9,11 @@ module Alfred
     class Autocomplete < Base
       def initialize(alfred, opts = {})
         super
+        @order = 1000
         @settings = {
-          :handler           => 'Autocomplete' ,
-          :items             => {}     ,
+          :handler        => 'Autocomplete' ,
+          :items          => {}             ,
+          :fuzzy_score    => 0.5            ,
         }.update(opts)
 
         if @settings[:items].empty?
@@ -19,6 +24,24 @@ module Alfred
       end
 
 
+      def add_fuzzy_match_feedback(items, before, query, base_item, to_feedback)
+        return unless items
+
+        matcher = FuzzyMatch.new(items)
+        matcher.find_all_with_score(query).each do |item, dice_similar, leven_similar|
+          next if item.size < query.size
+
+          if (item.start_with?(query) or
+              dice_similar > @settings[:fuzzy_score] or
+              leven_similar > @settings[:fuzzy_score])
+
+            to_feedback.add_item( base_item.merge(
+              :title        => item,
+              :autocomplete => "#{(before.dup.push item).join(' ')} "
+            ))
+          end
+        end
+      end
 
 
       def on_feedback
@@ -43,14 +66,9 @@ module Alfred
             ))
           end
         else
-          @settings[:items][option].each do |item|
-            if item.start_with?(tail) and !item.eql?(tail)
-              feedback.add_item( base_item.merge(
-                :title        => item,
-                :autocomplete => "#{(before.push item).join(' ')} "
-              ))
-            end
-          end
+
+          add_fuzzy_match_feedback(@settings[:items][option],
+                                   before, tail, base_item, feedback)
         end
 
       end
