@@ -149,6 +149,16 @@ Check the code in [alfred/feedback/item.rb]( https://github.com/zhaocai/alfred-w
 
 ## Troubleshooting
 
+1. ruby crashes
+
+One of the major reason for ruby crash is native extensions. Check the file `bundle/bundler/setup.rb` under the workflow folder; make sure it does not mixed up with [rvm](https://rvm.io/) like this:
+
+```ruby
+# ......
+$:.unshift File.expand_path("#{path}/../../../../../../../../.rvm/gems/ruby-2.0.0-p247@global/gems/plist-3.1.0/lib")
+$:.unshift File.expand_path("#{path}/../#{ruby_engine}/#{ruby_version}/gems/alfred-workflow-1.11.3/lib")
+$:.unshift File.expand_path("#{path}/../../../../../../../../.rvm/gems/ruby-2.0.0-p247@global/gems/json-1.8.0/lib")
+```
 
 
 

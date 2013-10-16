@@ -24,29 +24,11 @@ module Alfred
       end
 
 
-      def add_fuzzy_match_feedback(items, before, query, base_item, to_feedback)
-        return unless items
-
-        matcher = FuzzyMatch.new(items)
-        matcher.find_all_with_score(query).each do |item, dice_similar, leven_similar|
-          next if item.size < query.size
-
-          if (item.start_with?(query) or
-              dice_similar > @settings[:fuzzy_score] or
-              leven_similar > @settings[:fuzzy_score])
-
-            to_feedback.add_item( base_item.merge(
-              :title        => item,
-              :autocomplete => "#{(before.dup.push item).join(' ')} "
-            ))
-          end
-        end
-      end
 
 
       def on_feedback
         if @load_from_workflow_setting
-          @settings[:items].update @core.workflow_setting[:autocomplete]
+          @settings[:items].merge! @core.workflow_setting[:autocomplete]
         end
 
         before, option, tail = @core.last_option
@@ -59,20 +41,47 @@ module Alfred
         }
 
         if @settings[:items].has_key? tail
-          @settings[:items][tail].each do |item|
-            feedback.add_item( base_item.merge(
-              :title        => item,
-              :autocomplete => "#{(before.push [tail, item]).join(' ')} "
-            ))
+          unify_items(@settings[:items][tail]).each do |item|
+            base_item[:autocomplete] = "#{(before + [tail, item[:complete]]).join(' ')} "
+            feedback.add_item(base_item.update(item))
           end
         else
-
-          add_fuzzy_match_feedback(@settings[:items][option],
+          add_fuzzy_match_feedback(unify_items(@settings[:items][option]),
                                    before, tail, base_item, feedback)
         end
-
       end
 
+
+      def add_fuzzy_match_feedback(items, before, query, base_item, to_feedback)
+        matcher = FuzzyMatch.new(items, :read => :complete)
+        matcher.find_all_with_score(query).each do |item, dice_similar, leven_similar|
+          next if item[:complete].size < query.size
+
+          if (item[:complete].start_with?(query) or
+              dice_similar > @settings[:fuzzy_score] or
+              leven_similar > @settings[:fuzzy_score])
+
+            base_item[:autocomplete] = "#{(before + [item[:complete]]).join(' ')} "
+            to_feedback.add_item(base_item.update(item))
+          end
+        end
+      end
+
+      def unify_items(items)
+        return [] unless items
+        items.map! do |item|
+          if item.is_a? String
+            {:title => item, :complete => item}
+          elsif item.is_a? Hash
+            unless item.has_key? :complete
+              item[:complete] = item[:title]
+            end
+            item
+          else
+            raise InvalidArgument, "autocomplete handler can only accept string or hash"
+          end
+        end
+      end
 
     end
   end
