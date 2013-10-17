@@ -204,12 +204,19 @@ __APPLESCRIPT__}.chop
       end
 
       # step 3: close
-      @feedback.close if @feedback
+      close
       @handler_controller.each_handler do |handler|
         handler.on_close
       end
 
     end
+
+    def close
+      @feedback.close if @feedback
+      @setting.close if @setting
+      # @workflow_setting.close if @workflow_setting
+    end
+
 
     #
     # Parse and return user query to three parts
@@ -258,14 +265,21 @@ __APPLESCRIPT__}.chop
       @ui ||= LogUI.new(bundle_id)
     end
 
-    def setting(&blk)
-      @setting ||= Setting.new(self, &blk)
+    #
+    # user setting is stored in the storage_path by default
+    #
+    def user_setting(&blk)
+      @setting ||= init_setting(
+        :file => File.join(@core.storage_path, "setting.yaml")
+      )
     end
+    alias_method :setting, :user_setting
 
-    alias_method :user_setting, :setting
-
+    #
+    # workflow setting is stored in the workflow_folder
+    #
     def workflow_setting(opts = {})
-      @workflow_setting ||= init_workflow_setting(opts)
+      @workflow_setting ||= init_setting(opts)
     end
 
     def feedback(&blk)
@@ -339,7 +353,7 @@ __APPLESCRIPT__}.chop
 
     private
 
-    def init_workflow_setting(opts)
+    def init_setting(opts)
       default_opts = {
         :file    => File.join(Alfred.workflow_folder, "setting.yaml"),
         :format  => 'yaml',

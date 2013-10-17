@@ -25,7 +25,6 @@ module Alfred
 
 
 
-
       def on_feedback
         if @load_from_workflow_setting
           @settings[:items].merge! @core.workflow_setting[:autocomplete]
@@ -69,7 +68,7 @@ module Alfred
 
       def unify_items(items)
         return [] unless items
-        items.map! do |item|
+        items.map do |item|
           if item.is_a? String
             {:title => item, :complete => item}
           elsif item.is_a? Hash

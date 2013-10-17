@@ -36,10 +36,12 @@ module Alfred
       send("dump_to_#{format}".to_sym, opts)
     end
 
+    alias_method :close, :dump
+
     protected
 
     def load_from_yaml
-        self.merge!(YAML::load_file(@backend_file))
+      self.merge!(YAML::load_file(@backend_file))
     end
 
     def dump_to_yaml(opts = {})
