@@ -14,6 +14,7 @@ module Alfred
       @core = alfred
       use_backend(opts)
       instance_eval(&blk) if block_given?
+
     end
 
     def add_item(opts = {})
@@ -52,14 +53,20 @@ module Alfred
     # Merge with other feedback
     #
     def merge!(other)
-      @items |= other.items
+      if other.is_a? Array
+        @items |= other
+      elsif other.is_a? Alfred::Feedback
+        @items |= other.items
+      else
+        raise ArgumentError, "Feedback can not merge with #{other.class}"
+      end
     end
 
     #
     # The workflow is about to complete
     #
     # - save cached feedback if necessary
-    # 
+    #
     def close
       put_cached_feedback if @backend_file
     end

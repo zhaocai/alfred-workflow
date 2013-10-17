@@ -78,6 +78,10 @@ module Alfred
         @core.query
       end
 
+      def ui
+        @core.ui
+      end
+
       def feedback
         @core.feedback
       end

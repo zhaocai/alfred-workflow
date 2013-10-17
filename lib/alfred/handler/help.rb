@@ -1,5 +1,6 @@
 require 'alfred/handler'
 
+
 module Alfred
   module Handler
 
@@ -32,7 +33,7 @@ module Alfred
         @settings = {
           :handler           => 'Help' ,
           :exclusive?        => true   ,
-          :with_handler_help => false  ,
+          :with_handler_help => true   ,
           :items             => []     ,
           :default_order     => 10     ,
         }.update(opts)
@@ -69,7 +70,6 @@ module Alfred
       def on_feedback
         return unless feedback?
 
-
         if @settings[:with_handler_help]
           @settings[:items].push @core.on_help
           @core.handler_controller.each do |h|
@@ -83,7 +83,8 @@ module Alfred
           end
         end
 
-        @settings[:items].flatten!.compact!.map! { |i| HelpItem.new(i) }.sort!
+        @settings[:items].flatten!.compact!
+        @settings[:items].map! { |i| HelpItem.new(i) }.sort!
 
         @settings[:items].each do |item|
 

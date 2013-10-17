@@ -1,7 +1,6 @@
 require 'alfred/handler'
 require 'fuzzy_match'
 require 'amatch'
-FuzzyMatch.engine = :amatch
 
 module Alfred
   module Handler
@@ -21,6 +20,7 @@ module Alfred
         else
           @load_from_workflow_setting = false
         end
+        FuzzyMatch.engine = :amatch
       end
 
 

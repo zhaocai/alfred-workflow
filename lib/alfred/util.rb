@@ -1,4 +1,6 @@
 require 'uri'
+require 'terminal-notifier'
+require 'alfred/osx'
 
 class String
   def strip_heredoc
@@ -54,6 +56,25 @@ __APPLESCRIPT__}
             end try
         end tell
 __APPLESCRIPT__}
+      end
+
+
+      def search_command(query = '')
+        %Q{osascript <<__APPLESCRIPT__
+      tell application "Alfred 2"
+        search "#{escape_applescript(query)}"
+      end tell
+__APPLESCRIPT__}
+      end
+
+
+      def notify(query, message, opts = {:title => 'Alfred Notification'})
+        if Alfred::OSX.notification_center?
+          opts.merge!(:execute => search_command(query))
+          TerminalNotifier.notify(message, opts)
+        else
+          system search_command(query)
+        end
       end
 
     end

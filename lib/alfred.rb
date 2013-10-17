@@ -128,6 +128,8 @@ __APPLESCRIPT__}.chop
       @handler_controller = ::Alfred::Handler::Controller.new
 
       instance_eval(&blk) if block_given?
+
+      raise NoBundleIDError unless bundle_id
     end
 
 
@@ -261,30 +263,30 @@ __APPLESCRIPT__}.chop
     end
 
     def ui
-      raise NoBundleIDError unless bundle_id
       @ui ||= LogUI.new(bundle_id)
+    end
+
+
+    #
+    # workflow setting is stored in the workflow_folder
+    #
+    def workflow_setting(opts = {})
+      @workflow_setting ||= new_setting(opts)
     end
 
     #
     # user setting is stored in the storage_path by default
     #
     def user_setting(&blk)
-      @setting ||= init_setting(
+      @setting ||= new_setting(
         :file => File.join(@core.storage_path, "setting.yaml")
       )
     end
     alias_method :setting, :user_setting
 
-    #
-    # workflow setting is stored in the workflow_folder
-    #
-    def workflow_setting(opts = {})
-      @workflow_setting ||= init_setting(opts)
-    end
 
-    def feedback(&blk)
-      raise NoBundleIDError unless bundle_id
-      @feedback ||= Feedback.new(self, &blk)
+    def feedback(opts = {}, &blk)
+      @feedback ||= new_feedback(opts, &blk)
     end
 
     alias_method :with_cached_feedback, :feedback
@@ -299,9 +301,8 @@ __APPLESCRIPT__}.chop
     end
 
     def volatile_storage_path
-      raise NoBundleIDError unless bundle_id
       path = "#{ENV['HOME']}/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/#{bundle_id}"
-      unless File.exist?(path)
+      unless File.directory?(path)
         FileUtils.mkdir_p(path)
       end
       path
@@ -309,7 +310,6 @@ __APPLESCRIPT__}.chop
 
     # Non-volatile storage directory for this bundle
     def storage_path
-      raise NoBundleIDError unless bundle_id
       path = "#{ENV['HOME']}/Library/Application Support/Alfred 2/Workflow Data/#{bundle_id}"
       unless File.exist?(path)
         FileUtils.mkdir_p(path)
@@ -351,20 +351,25 @@ __APPLESCRIPT__}.chop
     end
 
 
-    private
+    def new_feedback(opts, &blk)
+      ::Alfred::Feedback.new(self, opts, &blk)
+    end
 
-    def init_setting(opts)
+
+    def new_setting(opts)
       default_opts = {
         :file    => File.join(Alfred.workflow_folder, "setting.yaml"),
         :format  => 'yaml',
       }
       opts = default_opts.update(opts)
 
-      Setting.new(self) do
+      ::Alfred::Setting.new(self) do
         @backend_file = opts[:file]
         @formt = opts[:format]
       end
     end
+
+    private
 
     def reload_help_item
       title = []
