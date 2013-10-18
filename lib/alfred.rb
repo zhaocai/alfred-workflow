@@ -123,6 +123,7 @@ __APPLESCRIPT__}.chop
         :use_exclamation_mark => false
       }
 
+      @query = ARGV
       @raw_query = ARGV.dup
 
       @handler_controller = ::Alfred::Handler::Controller.new

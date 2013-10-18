@@ -98,6 +98,7 @@ module Alfred
     #
     # ## serialization
     #
+
     def use_backend(opts = {})
       @backend_file = opts[:file] if opts[:file]
       @should_expire_after_second = opts[:expire].to_i if opts[:expire]
@@ -135,6 +136,27 @@ module Alfred
 
     def append(from_file)
       @items << File.open(from_file, "rb") { |f| Marshal.load(f) }
+    end
+
+    #
+    # Provides yaml serialization support
+    #
+    def to_yaml_properties
+      [ '@items' ]
+    end
+
+    #
+    # Provides marshalling support for use by the Marshal library.
+    #
+    def marshal_dump
+      @items
+    end
+
+    #
+    # Provides marshalling support for use by the Marshal library.
+    #
+    def marshal_load(x)
+      @items = x
     end
 
   end
