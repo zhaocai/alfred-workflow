@@ -8,7 +8,6 @@ module Alfred
     class Autocomplete < Base
       def initialize(alfred, opts = {})
         super
-        @order = 1000
         @settings = {
           :handler        => 'Autocomplete' ,
           :items          => {}             ,

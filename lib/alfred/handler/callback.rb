@@ -9,7 +9,7 @@ require 'alfred/util'
 # == Example:
 #   Suppose we have a callback with key "demo"
 #
-# - @backend[ENTRY_KEY] => {
+# - @backend[ENTRIES_KEY] => {
 #   'demo' => {:key => 'demo', :title => 'title', :subtitle => ...}
 # }
 #
@@ -18,7 +18,7 @@ require 'alfred/util'
 module Alfred::Handler
 
   class Callback < Base
-    ENTRY_KEY = 'feedback_entries'
+    ENTRIES_KEY = 'feedback_entries'
 
     def initialize(alfred, opts = {})
       super
@@ -48,7 +48,7 @@ module Alfred::Handler
       return unless feedback?
       if entries[options.callback]
         feedback.merge! backend[options.callback]
-      @status = :exclusive if @settings[:exclusive?]
+        @status = :exclusive if @settings[:exclusive?]
 
       elsif entries.empty?
         # show a warn feedback item
@@ -67,8 +67,9 @@ module Alfred::Handler
           feedback.add_item(
             {
               :title        => "Feedback Callback: #{key}" ,
-              :valid        => 'no'                              ,
-              :autocomplete => "--callback '#{key}'"           ,
+              :subtitle     => "#{entry[:timestamp]}",
+              :valid        => 'no'                        ,
+              :autocomplete => "--callback '#{key}'"       ,
               :icon         => ::Alfred::Feedback.CoreServicesIcon('AliasBadgeIcon') ,
             }.merge(entry)
           )
@@ -92,21 +93,23 @@ module Alfred::Handler
 
 
     def add_entry(entry, feedback_items)
-      new_entries = entries.merge(entry[:key] => entry)
-      backend[ENTRY_KEY] = new_entries
-      backend[entry[:key]] = feedback_items
+      entry.merge!(:timestamp => Time.now)
+      key = entry[:key]
+      new_entries = entries.merge(key => entry)
+      backend[ENTRIES_KEY] = new_entries
+      backend[key] = feedback_items
     end
 
     def remove_entry(key)
       new_entries = entries.delete(key)
-      backend[ENTRY_KEY] = new_entries
+      backend[ENTRIES_KEY] = new_entries
       backend.delete(key)
     end
 
 
 
     def entries
-      backend[ENTRY_KEY]
+      backend[ENTRIES_KEY]
     end
 
 
@@ -115,8 +118,8 @@ module Alfred::Handler
                               :file => File.join(@settings[:backend_dir],
                                                  @settings[:backend_file]))
 
-      unless @backend.key?(ENTRY_KEY)
-        @backend[ENTRY_KEY] = {}
+      unless @backend.key?(ENTRIES_KEY)
+        @backend[ENTRIES_KEY] = {}
       end
       @backend
     end

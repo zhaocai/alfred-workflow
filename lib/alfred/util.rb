@@ -68,10 +68,15 @@ __APPLESCRIPT__}
       end
 
 
-      def notify(query, message, opts = {:title => 'Alfred Notification'})
+      def notify(query, message, opts = {})
         if Alfred::OSX.notification_center?
-          opts.merge!(:execute => search_command(query))
-          TerminalNotifier.notify(message, opts)
+          notifier_options = {
+            :title   => 'Alfred Notification'             ,
+            :sound   => 'default'                         ,
+            :execute => search_command(query)             ,
+          }.merge!(opts)
+          p notifier_options
+          TerminalNotifier.notify(message, notifier_options)
         else
           system search_command(query)
         end
@@ -81,4 +86,3 @@ __APPLESCRIPT__}
   end
 
 end
-
