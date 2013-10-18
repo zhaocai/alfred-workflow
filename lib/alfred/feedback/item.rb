@@ -63,7 +63,7 @@ module Alfred
         send(@matcher, query)
       end
 
-      # 
+      #
       # Matchers
       #
       def always_match?(query)
@@ -132,6 +132,9 @@ module Alfred
 
       protected
 
+      #
+      # Regex helpers
+      # 
       def build_regexp(query, option)
         begin
           Regexp.compile(".*#{query.gsub(/\s+/,'.*')}.*", option)

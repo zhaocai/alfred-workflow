@@ -141,8 +141,14 @@ module Alfred
     #
     # Provides yaml serialization support
     #
-    def to_yaml_properties
-      [ '@items' ]
+    if RUBY_VERSION < "1.9"
+      def to_yaml_properties
+        [ '@items' ]
+      end
+    else
+      def encode_with(coder)
+        coder['items'] = @items
+      end
     end
 
     #
