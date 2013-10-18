@@ -7,11 +7,13 @@ module Alfred
 
   module Handler
     class Base
+      Base_Invoke_Order = 100
+
       attr_reader :status, :order
 
       def initialize(alfred, opts = {})
         @core = alfred
-        @order = 100
+        @order = Base_Invoke_Order
         @status = :initialize
       end
 

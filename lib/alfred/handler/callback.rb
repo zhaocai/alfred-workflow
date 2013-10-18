@@ -23,14 +23,14 @@ module Alfred::Handler
     def initialize(alfred, opts = {})
       super
       @settings = {
-        :handler      => 'Callback'                  ,
-        :exclusive?   => true                        ,
-        :backend_dir  => @core.volatile_storage_path ,
-        :backend_file => 'callback.yaml'           ,
-        :order        => 5
+        :handler       => 'Callback'                  ,
+        :exclusive?    => true                        ,
+        :backend_dir   => @core.volatile_storage_path ,
+        :backend_file  => 'callback.yaml'             ,
+        :handler_order => ( Base_Invoke_Order / 12 )
       }.update(opts)
 
-      @order = @settings[:order]
+      @order = @settings[:handler_order]
     end
 
 

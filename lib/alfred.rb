@@ -385,7 +385,7 @@ __APPLESCRIPT__}.chop
       unless title.empty?
         return {
           :kind  => 'text',
-          :order => 100,
+          :order => (Handler::HelpItem::Base_Order * 10),
           :title => "#{title.join(', ')} [Reload cached feedback unconditionally]" ,
           :subtitle => %q{The '!' mark must be at the beginning or end of the query.} ,
         }

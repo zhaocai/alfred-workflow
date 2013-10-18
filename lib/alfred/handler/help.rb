@@ -5,7 +5,7 @@ module Alfred
   module Handler
 
     class HelpItem < ::Hash
-      Default_Order = 10
+      Base_Order = 10
       def initialize(attributes = {}, &block)
         super(&block)
         initialize_attributes(attributes)
@@ -21,7 +21,7 @@ module Alfred
         attributes.each_pair do |att, value|
           self[att] = value
         end if attributes
-        self[:order] = Default_Order unless self[:order]
+        self[:order] = Base_Order unless self[:order]
       end
     end
 
@@ -29,14 +29,16 @@ module Alfred
     class Help < Base
       def initialize(alfred, opts = {})
         super
-        @order = 9
         @settings = {
-          :handler           => 'Help' ,
-          :exclusive?        => true   ,
-          :with_handler_help => true   ,
-          :items             => []     ,
-          :default_order     => 10     ,
+          :handler           => 'Help'                     ,
+          :exclusive?        => true                       ,
+          :with_handler_help => true                       ,
+          :items             => []                         ,
+          :handler_order     => ( Base_Invoke_Order / 10 )
         }.update(opts)
+
+        @order = @settings[:handler_order]
+
         if @settings[:items].empty?
           @load_from_workflow_setting = true
         else
@@ -53,13 +55,13 @@ module Alfred
 
       def on_help
         {
-          :kind         => 'text'                                      ,
-          :order        => 100                                         ,
+          :kind         => 'text'                      ,
+          :valid        => 'no'                        ,
+          :autocomplete => '-h'                        ,
+          :match?       => :always_match?              ,
+          :order        => (HelpItem::Base_Order * 12) ,
           :title        => '-?, -h, --help [Show Workflow Usage Help]' ,
           :subtitle     => 'Other feedbacks are blocked.'              ,
-          :valid        => 'no'                                        ,
-          :autocomplete => '-h'                                        ,
-          :match?       => :always_match?                              ,
         }
       end
 
