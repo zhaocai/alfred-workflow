@@ -4,6 +4,9 @@ module Alfred
   class Feedback
     class Item
       attr_accessor :uid, :arg, :valid, :autocomplete, :title, :subtitle, :icon, :type
+      attr_accessor :order
+
+      Default_Order = 256
 
       def initialize(title, opts = {})
         @title    = title
@@ -46,8 +49,21 @@ module Alfred
         else
           @matcher ||= :title_match?
         end
+
+        if opts[:order]
+          @order = opts[:order]
+        else
+          @order = Default_Order
+        end
       end
 
+
+      # sort function
+      def <=>(other)
+        @order <=> other.order
+      end
+
+      
       ## To customize a new matcher?, define it.
       #
       # Module Alfred
@@ -134,7 +150,7 @@ module Alfred
 
       #
       # Regex helpers
-      # 
+      #
       def build_regexp(query, option)
         begin
           Regexp.compile(".*#{query.gsub(/\s+/,'.*')}.*", option)

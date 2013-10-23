@@ -35,6 +35,8 @@ module Alfred
 
     def to_xml(with_query = '', items = @items)
       document = REXML::Element.new("items")
+      @items.sort!
+
       if with_query.empty?
         items.each do |item|
           document << item.to_xml
