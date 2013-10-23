@@ -44,9 +44,41 @@ module Alfred
     #      MyHandler.new(alfred).register
     #    end
     #
-    def with_friendly_error(alfred = Alfred::Core.new, &blk)
+    def with_friendly_error(alfred_core = nil, &blk)
       begin
+        if alfred_core.nil? or !alfred_core.is_a?(::Alfred::Core)
+          alfred = Alfred::Core.new
+        end
+      rescue Exception => e
+        log_file = File.expand_path("~/Library/Logs/Alfred-Workflow.log")
+        rescue_feedback = %Q{
+          <items>
+            <item autocomplete="" uid="Rescue Feedback" valid="no">
+              <title>Alfred Gem Fail to Initialize.</title>
+              <arg>Alfred::NoBundleIDError: Wrong Bundle ID Test!</arg>
+              <subtitle>Check log #{log_file} for extra debug info.</subtitle>
+              <icon>/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertStopIcon.icns</icon>
+            </item>
+            <item autocomplete="Alfred-Workflow.log" type="file" valid="yes">
+              <title>Alfred-Workflow.log</title>
+              <arg>#{log_file}</arg>
+              <subtitle>#{log_file}</subtitle>
+              <icon type="fileicon">/Applications/Utilities/Console.app</icon>
+            </item>
+          </items>
+        }
+        puts rescue_feedback
 
+        File.open(log_file, "a+") do |log|
+          log.puts "Alfred Gem Fail to Initialize.\n  #{e.message}"
+          log.puts e.backtrace.join("  \n")
+          log.flush
+        end
+
+        exit e.status_code
+      end
+
+      begin
         yield alfred
         alfred.start_handler
 
@@ -76,13 +108,15 @@ module Alfred
           "  #{e.inspect}\n  #{e.backtrace.join("  \n")}\n")
         puts alfred.rescue_feedback(
           :title => "Fatal Error!") if alfred.with_rescue_feedback
-        exit(-1)
+          exit(-1)
       end
     end
+
 
     def workflow_folder
       Dir.pwd
     end
+
 
     # launch alfred with query
     def search(query = "")
