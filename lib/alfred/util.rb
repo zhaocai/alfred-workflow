@@ -41,7 +41,20 @@ __APPLESCRIPT__}
 
       def open_url(url)
         uri = URI.parse(url)
-        %x{open #{uri.to_s}}
+        %x{/usr/bin/open #{uri.to_s}}
+      end
+
+      def open_with(app, path)
+        %x{osascript <<__APPLESCRIPT__
+        tell application "#{app}"
+            try
+                open "#{path}"
+                activate
+            on error err_msg number err_num
+                return err_msg
+            end try
+        end tell
+__APPLESCRIPT__}
       end
 
       def reveal_in_finder(path)

@@ -2,11 +2,10 @@
 
 Gem::Specification.new do |s|
   s.name = "alfred-workflow"
-  s.version = "2.0.1.20131023022544"
+  s.version = "2.0.1.20131023093234"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Zhao Cai"]
-  s.cert_chain = ["/Users/zhaocai/.gem/gem-public_cert.pem"]
   s.date = "2013-10-23"
   s.description = "alfred-workflow is a ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow."
   s.email = ["caizhaoff@gmail.com"]
@@ -18,7 +17,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = "alfred-workflow"
   s.rubygems_version = "2.0.3"
-  s.signing_key = "/Users/zhaocai/.gem/gem-private_key.pem"
   s.summary = "alfred-workflow is a ruby Gem helper for building [Alfred](http://www.alfredapp.com) workflow."
 
   if s.respond_to? :specification_version then

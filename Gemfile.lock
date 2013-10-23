@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    alfred-workflow (2.0.1.20131023022544)
+    alfred-workflow (2.0.1.20131023093234)
       fuzzy_match (>= 2.0.4)
       gyoku (>= 1.1.0)
       moneta (>= 0.7.19)

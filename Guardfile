@@ -15,7 +15,7 @@ end
 
 group :singleruby do
 
-  guard 'rspec', :rvm => ['default'], :notification  => true  do
+  guard 'rspec', :rvm => ['system'], :notification  => true  do
 
     watch(%r{^spec/.+_spec\.rb$})
     watch(%r{^lib/(.+)\.rb$})     { |m| "spec/#{m[1]}_spec.rb" }
@@ -26,7 +26,7 @@ end
 
 group :multirubies do
 
-  guard 'rspec', :rvm => ['default', '1.9.3', '1.8.7'], :notification  => true  do
+  guard 'rspec', :rvm => ['system', '1.9.3', '1.8.7'], :notification  => true  do
 
     watch(%r{^spec/.+_spec\.rb$})
     watch(%r{^lib/(.+)\.rb$})     { |m| "spec/#{m[1]}_spec.rb" }

@@ -7,60 +7,35 @@ describe "Setting with yaml as backend" do
   end
 
   it "should use yaml as defualt backend" do
-    @alfred.setting.format.should == "yaml"
+    @alfred.workflow_setting.format.should == "yaml"
   end
 
   it "should correctly load settings" do
-    @alfred.setting[:id].should == "me.zhaowu.alfred-workflow-gem"
+    @alfred.workflow_setting[:id].should == "me.zhaowu.alfred-workflow-gem"
   end
 
   it "should correctly save settings" do
-    @alfred.setting[:language] = "Chinese"
-    @alfred.setting.dump(:flush => true)
+    rand = Random.rand(100000) 
 
-    @alfred.setting.load
-    @alfred.setting[:language].should == "Chinese"
+    @alfred.workflow_setting[:rand] = rand
+    @alfred.workflow_setting.dump(:flush => true)
+
+    @alfred.workflow_setting.load
+    @alfred.workflow_setting[:rand].should == rand
+
   end
 
+  it "should handle common hash methods" do
+    @alfred.workflow_setting.delete :rand
+
+    @alfred.workflow_setting[:rand].should == nil
+  end
 
   after :all do
     reset_workflow
-    File.unlink(@alfred.setting.backend_file)
   end
 
 end
-
-
-
-
-# describe "Setting with plist as backend" do
-  # before :all do
-    # setup_workflow
-    # @alfred =  Alfred::Core.new
-
-    # @alfred.setting do
-      # @format = 'plist'
-    # end
-  # end
-
-  # it "should correctly load settings" do
-    # @alfred.setting['id'].should == "me.zhaowu.alfred-workflow-gem"
-  # end
-
-  # it "should correctly save settings" do
-    # @alfred.setting['language'] = "English"
-    # @alfred.setting.dump(:flush => true)
-
-    # @alfred.setting['language'].should == "English"
-  # end
-
-
-  # after :all do
-    # reset_workflow
-    # File.unlink(@alfred.setting.backend_file)
-  # end
-
-# end
 
 
 

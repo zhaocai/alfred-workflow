@@ -136,7 +136,7 @@ describe "Feedback" do
   after :all do
     @alfred.with_cached_feedback
     fb = @alfred.feedback
-    Fil.unlink(fb.backend_file)
+    File.unlink(fb.backend_file)
     reset_workflow
   end
 

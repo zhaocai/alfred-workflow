@@ -1,9 +1,11 @@
---- 
+---
 :id: me.zhaowu.alfred-workflow-gem
-:help: 
-  - :kind: url
-    :title: Check the Homepage for help
-    :webloc: homepage.webloc
-    :subtitle: https://github.com/zhaocai/alfred-workflow
-    :url: https://github.com/zhaocai/alfred-workflow
-  - :kind: url
+:help:
+- :kind: url
+  :title: Check the Homepage for help
+  :webloc: homepage.webloc
+  :subtitle: https://github.com/zhaocai/alfred-workflow
+  :url: https://github.com/zhaocai/alfred-workflow
+- :kind: file
+  :path: README.pdf
+:rand: 59510
