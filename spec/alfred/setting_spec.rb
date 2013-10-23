@@ -15,7 +15,7 @@ describe "Setting with yaml as backend" do
   end
 
   it "should correctly save settings" do
-    rand = Random.rand(100000) 
+    rand = rand(10**24-10)
 
     @alfred.workflow_setting[:rand] = rand
     @alfred.workflow_setting.dump(:flush => true)
