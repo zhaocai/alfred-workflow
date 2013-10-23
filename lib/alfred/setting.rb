@@ -3,7 +3,8 @@ require 'yaml'
 module Alfred
 
   class Setting < ::Hash
-    attr_accessor :backend_file, :format
+    attr_accessor :backend_file
+    attr_reader :format
 
     def initialize(alfred, &block)
       super()

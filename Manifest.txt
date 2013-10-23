@@ -1,3 +1,4 @@
+.gemtest
 .rspec
 .ruby-version
 Gemfile
@@ -13,6 +14,12 @@ lib/alfred/feedback.rb
 lib/alfred/feedback/file_item.rb
 lib/alfred/feedback/item.rb
 lib/alfred/feedback/webloc_item.rb
+lib/alfred/handler.rb
+lib/alfred/handler/autocomplete.rb
+lib/alfred/handler/callback.rb
+lib/alfred/handler/cofig.rb
+lib/alfred/handler/help.rb
+lib/alfred/osx.rb
 lib/alfred/setting.rb
 lib/alfred/ui.rb
 lib/alfred/util.rb

@@ -280,7 +280,7 @@ __APPLESCRIPT__}.chop
     #
     def user_setting(&blk)
       @setting ||= new_setting(
-        :file => File.join(@core.storage_path, "setting.yaml")
+        :file => File.join(storage_path, "setting.yaml")
       )
     end
     alias_method :setting, :user_setting

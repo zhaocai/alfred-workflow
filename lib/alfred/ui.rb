@@ -1,6 +1,5 @@
 require 'logger'
 require 'fileutils'
-require 'awesome_print'
 
 
 module Alfred

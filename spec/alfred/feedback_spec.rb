@@ -6,7 +6,7 @@ describe "Feedback" do
     setup_workflow
 
     @alfred =  Alfred::Core.new
-    @feedback = Alfred::Feedback.new
+    @feedback = Alfred::Feedback.new(@alfred)
 
     @item_elements = %w{title subtitle icon}
     @item_attributes = %w{uid arg autocomplete}
@@ -67,15 +67,16 @@ describe "Feedback" do
         use_cache_file :expire => 10
       end
       fb = @alfred.feedback
-      fb.cache_file.should == File.join(@alfred.volatile_storage_path, "cached_feedback")
+      fb.backend_file.should == File.join(@alfred.volatile_storage_path, "cached_feedback")
     end
 
     it "should set correct cache file" do
-      @alfred.with_cached_feedback do
-        use_cache_file :file => "cached_feedback"
+      alfred =  Alfred::Core.new
+      alfred.with_cached_feedback do
+        use_cache_file :file => "new_cached_feedback"
       end
-      fb = @alfred.feedback
-      fb.cache_file.should == "cached_feedback"
+      fb = alfred.feedback
+      fb.backend_file.should == "new_cached_feedback"
     end
 
     context "With Valid Cached File" do
@@ -130,13 +131,12 @@ describe "Feedback" do
       end
 
     end
-
   end
 
   after :all do
     @alfred.with_cached_feedback
     fb = @alfred.feedback
-    File.unlink(fb.cache_file)
+    Fil.unlink(fb.backend_file)
     reset_workflow
   end
 
