@@ -20,7 +20,7 @@ Hoe.spec 'alfred-workflow' do
   extra_deps << ['plist', '>= 3.1.0']
   extra_deps << ['moneta', '>= 0.7.19']
   extra_deps << ['gyoku', '>= 1.1.0'] << ['nori', '>= 2.3.0']
-  extra_deps << ['fuzzy_match', '>= 2.0.4'] << ['amatch', '>= 0.2.11']
+  extra_deps << ['fuzzy_match', '>= 2.0.4']
   extra_deps << ['terminal-notifier', '>= 1.5.0']
 
 
@@ -45,7 +45,7 @@ end
 
 desc "automate guard rspec"
 task :guard  do
-  sh %q{bundle exec guard --group=system}
+  sh %q{bundle exec guard --group=singleruby}
 end
 
 desc "multirubies"

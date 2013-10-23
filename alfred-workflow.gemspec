@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = "alfred-workflow"
-  s.version = "2.0.0.20131023015039"
+  s.version = "2.0.1.20131023022544"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Zhao Cai"]
@@ -30,7 +30,6 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<gyoku>, [">= 1.1.0"])
       s.add_runtime_dependency(%q<nori>, [">= 2.3.0"])
       s.add_runtime_dependency(%q<fuzzy_match>, [">= 2.0.4"])
-      s.add_runtime_dependency(%q<amatch>, [">= 0.2.11"])
       s.add_runtime_dependency(%q<terminal-notifier>, [">= 1.5.0"])
       s.add_development_dependency(%q<hoe-yard>, [">= 0.1.2"])
       s.add_development_dependency(%q<awesome_print>, [">= 1.2.0"])
@@ -53,7 +52,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<gyoku>, [">= 1.1.0"])
       s.add_dependency(%q<nori>, [">= 2.3.0"])
       s.add_dependency(%q<fuzzy_match>, [">= 2.0.4"])
-      s.add_dependency(%q<amatch>, [">= 0.2.11"])
       s.add_dependency(%q<terminal-notifier>, [">= 1.5.0"])
       s.add_dependency(%q<hoe-yard>, [">= 0.1.2"])
       s.add_dependency(%q<awesome_print>, [">= 1.2.0"])
@@ -77,7 +75,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<gyoku>, [">= 1.1.0"])
     s.add_dependency(%q<nori>, [">= 2.3.0"])
     s.add_dependency(%q<fuzzy_match>, [">= 2.0.4"])
-    s.add_dependency(%q<amatch>, [">= 0.2.11"])
     s.add_dependency(%q<terminal-notifier>, [">= 1.5.0"])
     s.add_dependency(%q<hoe-yard>, [">= 0.1.2"])
     s.add_dependency(%q<awesome_print>, [">= 1.2.0"])
