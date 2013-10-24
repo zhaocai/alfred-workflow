@@ -44,6 +44,10 @@ __APPLESCRIPT__}
         %x{/usr/bin/open #{uri.to_s}}
       end
 
+      def google(query)
+        open_url %Q{http://www.google.com/search?as_q=#{URI.escape(query)}&lr=lang_}
+      end
+
       def open_with(app, path)
         %x{osascript <<__APPLESCRIPT__
         tell application "#{app}"
