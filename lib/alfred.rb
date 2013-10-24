@@ -256,6 +256,31 @@ __APPLESCRIPT__}.chop
 
 
     #
+    # User query without reload options 
+    #
+    def user_query
+      q = @raw_query.dup
+
+      if cached_feedback?
+        if @cached_feedback_reload_option[:use_exclamation_mark] 
+          if q[0].eql?('!')
+            q.shift
+          elsif q[-1].eql?('!')
+            q.delete_at(-1)
+          end
+        end
+
+        if @cached_feedback_reload_option[:use_reload_option]
+          q.delete_if do |v|
+            ['-r', '--reload'].include? v
+          end
+        end
+      end
+
+      q
+    end
+
+    #
     # Parse and return user query to three parts
     #
     #   [ [before], last option, tail ]
@@ -273,6 +298,8 @@ __APPLESCRIPT__}.chop
 
       return [], '', @raw_query.join(' ')
     end
+
+
 
     def options(opts = {})
       @options ||= OpenStruct.new(opts)
@@ -408,7 +435,7 @@ __APPLESCRIPT__}.chop
 
     def reload_help_item
       title = []
-      if  @cached_feedback_reload_option[:use_exclamation_mark]
+      if @cached_feedback_reload_option[:use_exclamation_mark]
         title.push "!"
       end
 

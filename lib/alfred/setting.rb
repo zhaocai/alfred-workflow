@@ -43,6 +43,19 @@ module Alfred
     alias_method :close, :dump
 
     #
+    # Provides yaml serialization support
+    #
+    if RUBY_VERSION < "1.9"
+      def to_yaml_properties
+        [ '@table' ]
+      end
+    else
+      def encode_with(coder)
+        coder['table'] = @table
+      end
+    end
+
+    #
     # Provides marshalling support for use by the Marshal library.
     #
     def marshal_dump
