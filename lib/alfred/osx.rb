@@ -35,6 +35,8 @@ module Alfred
           short_name = "Mountain Lion"
         when 10.9
           short_name = "Mavericks"
+        when 10.10
+          short_name = "Yosemite"
         end
 
         return short_name
