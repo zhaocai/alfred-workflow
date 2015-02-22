@@ -49,7 +49,7 @@ module Alfred
         begin
           version = %x{/usr/bin/sw_vers -productVersion}.chop
         rescue Errno::ENOENT => e
-          raise Errno::ENOENT, "This computer is not running Mac OS X becasue #{e.message}"
+          raise Errno::ENOENT, "This computer is not running Mac OS X because #{e.message}"
         end
 
         segments = version.split('.')[0,3].map!{|p| p.to_i}
