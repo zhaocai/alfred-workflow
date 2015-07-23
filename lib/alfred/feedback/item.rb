@@ -3,7 +3,7 @@ require "rexml/document"
 module Alfred
   class Feedback
     class Item
-      attr_accessor :uid, :arg, :valid, :autocomplete, :title, :subtitle, :icon, :type
+      attr_accessor :uid, :arg, :valid, :autocomplete, :title, :subtitle, :icon, :type, :mod_subtitles
       attr_accessor :order
 
       Default_Order = 256
@@ -11,6 +11,7 @@ module Alfred
       def initialize(title, opts = {})
         @title    = title
         @subtitle = opts[:subtitle] if opts[:subtitle]
+        @mod_subtitles = opts[:mod_subtitles] if opts[:mod_subtitles]
 
         if opts[:icon]
           @icon    = opts[:icon]
@@ -107,7 +108,7 @@ module Alfred
         }
 
         queries.delete_if { |q|
-          q.match(@title) or q.match(@subtitle)
+          q.match(@title) or q.match(@subtitle) or @mod_subtitles.keep_if{|s| q.match(s) }.length
         }
 
         if queries.empty?
@@ -138,6 +139,11 @@ module Alfred
         REXML::Element.new("title", xml_element).text    = @title
         REXML::Element.new("arg", xml_element).text      = @arg
         REXML::Element.new("subtitle", xml_element).text = @subtitle
+        
+        @mod_subtitles.each_pair do |key, value|
+          mod_sub = REXML::Element.new("subtitle", xml_element).text = @subtitle
+          mod_sub.add_attributes('mod' => key)
+        end
 
         icon = REXML::Element.new("icon", xml_element)
         icon.text = @icon[:name]
