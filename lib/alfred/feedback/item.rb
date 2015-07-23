@@ -140,9 +140,11 @@ module Alfred
         REXML::Element.new("arg", xml_element).text      = @arg
         REXML::Element.new("subtitle", xml_element).text = @subtitle
         
-        @mod_subtitles.each_pair do |key, value|
-          mod_sub = REXML::Element.new("subtitle", xml_element).text = @subtitle
-          mod_sub.add_attributes('mod' => key)
+        if @mod_subtitles 
+          @mod_subtitles.each_pair do |key, value|
+            mod_sub = REXML::Element.new("subtitle", xml_element).text = @subtitle
+            mod_sub.add_attributes('mod' => key)
+          end
         end
 
         icon = REXML::Element.new("icon", xml_element)
