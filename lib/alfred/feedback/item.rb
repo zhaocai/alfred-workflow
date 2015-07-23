@@ -142,7 +142,8 @@ module Alfred
         
         if @mod_subtitles 
           @mod_subtitles.each_pair do |key, value|
-            mod_sub = REXML::Element.new("subtitle", xml_element).text = @subtitle
+            mod_sub = REXML::Element.new("subtitle", xml_element)
+            mod_sub.text = value
             mod_sub.add_attributes('mod' => key)
           end
         end
